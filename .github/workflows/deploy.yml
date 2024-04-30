@@ -40,9 +40,11 @@ jobs:
           port: 22
           script_stop: true
           script: |
-            # Gently stop the Java process
-            pkill -f 'java -jar'
+            # Gently stop the specific Java process
+            pkill -f 'SpaghettiCodingClub-0.0.1-SNAPSHOT.jar'
             # Wait for a few seconds to let the process terminate gracefully
             sleep 10
+            # Ensure the jar has execute permissions
+            chmod +x SpaghettiCodingClub-0.0.1-SNAPSHOT.jar
             # Start the new Java application
-            nohup java -jar *.jar > app.log 2>&1 &
+            nohup java -jar SpaghettiCodingClub-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
