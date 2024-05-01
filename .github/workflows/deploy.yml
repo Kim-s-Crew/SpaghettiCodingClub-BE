@@ -19,23 +19,27 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
       
-      - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew
-      
       - name: Build jar with Gradle
         run: ./gradlew bootJar
       
-      - name: Copy jar to server
-        uses: appleboy/scp-action@master
+      - name: Load Docker environment
+        run: |
+          echo "PROD_DB_PASSWORD=${{ secrets.PROD_DB_PASSWORD }}" >> $GITHUB_ENV
+          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> $GITHUB_ENV
+          
+      - name: Build Docker image
+        run: docker build -t myapp .
+      
+      - name: Docker Login
+        uses: docker/login-action@v1
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ec2-user
-          key: ${{ secrets.SSH_KEY }}
-          port: 22
-          source: "./build/libs/SpaghettiCodingClub-0.0.1-SNAPSHOT.jar"
-          target: "~/"
-
-      - name: SSH Commands
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Push Docker image
+        run: docker push myapp:latest
+      
+      - name: Deploy to server
         uses: appleboy/ssh-action@v0.1.6
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -43,15 +47,5 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: |
-            # Gently stop the specific Java process
-            pkill -f 'SpaghettiCodingClub-0.0.1-SNAPSHOT.jar'
-            # Wait for a few seconds to let the process terminate gracefully
-            sleep 10
-            # Ensure the jar has execute permissions
-            chmod +x ~/SpaghettiCodingClub-0.0.1-SNAPSHOT.jar
-            # Start the new Java application
-            nohup java -Dspring.datasource.url=${{ secrets.PROD_DB_URL }} \
-                       -Dspring.datasource.username=${{ secrets.PROD_DB_USER }} \
-                       -Dspring.datasource.password=${{ secrets.PROD_DB_PASSWORD }} \
-                       -Djwt.secret.key=${{ secrets.JWT_SECRET_KEY }} \
-                       -jar ~/SpaghettiCodingClub-0.0.1-SNAPSHOT.jar > ~/app.log 2>&1 &
+            docker pull myapp:latest
+            docker run -d --name myapp -p 80:8080 myapp:latest
