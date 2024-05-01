@@ -5,8 +5,8 @@ services:
     ports:
       - "23306:3306"
     environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}  # 데이터베이스 이름을 지정
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}  # 루트 비밀번호를 지정
+      MYSQL_DATABASE: spaghettiDB
+      MYSQL_ROOT_PASSWORD: ${PROD_DB_PASSWORD}
     restart: always
 
   nginx:
@@ -23,4 +23,9 @@ services:
       - "8080:8080"
     depends_on:
       - mysql
+    environment:
+      SPRING_DATASOURCE_URL: ${PROD_DB_URL}
+      SPRING_DATASOURCE_USERNAME: ${PROD_DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${PROD_DB_PASSWORD}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
     restart: always
