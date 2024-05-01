@@ -48,4 +48,6 @@ jobs:
           port: 22
           script: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/spaghetti-docker:latest
-            docker run -d --name myapp -p 80:8080 ${{ secrets.DOCKER_USERNAME }}/spaghetti-docker:latest
+            docker stop spaghetti-container || true
+            docker rm spaghetti-container || true
+            docker run -d --name spaghetti-container -p 80:8080 ${{ secrets.DOCKER_USERNAME }}/spaghetti-docker:latest
