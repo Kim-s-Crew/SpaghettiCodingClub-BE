@@ -3,7 +3,7 @@ services:
   mysql:
     image: mysql:latest
     ports:
-      - "23306:3306"
+      - "3306:3306"
     environment:
       MYSQL_DATABASE: spaghettiDB
       MYSQL_ROOT_PASSWORD: ${PROD_DB_PASSWORD}
@@ -18,7 +18,7 @@ services:
     restart: always
 
   app:
-    build: .
+    image: ${DOCKER_USERNAME}/spaghetti-docker:latest
     ports:
       - "8080:8080"
     depends_on:
