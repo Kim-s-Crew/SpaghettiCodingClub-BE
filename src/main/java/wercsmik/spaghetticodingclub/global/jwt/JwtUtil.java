@@ -88,8 +88,10 @@ public class JwtUtil {
     }
 
 
-    public void addJwtToHeader(String accessToken,
-            HttpServletResponse response) {
+    public void addJwtToHeader(String accessToken, HttpServletResponse response) {
+        if (!accessToken.startsWith(BEARER_PREFIX)) {
+            accessToken = BEARER_PREFIX + accessToken;
+        }
 
         response.addHeader(AUTHORIZATION_HEADER, accessToken);
     }
