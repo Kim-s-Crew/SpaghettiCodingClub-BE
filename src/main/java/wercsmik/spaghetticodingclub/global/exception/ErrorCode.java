@@ -14,7 +14,7 @@ public enum ErrorCode {
 
     KAKAOID_ALREADY_EXIST(401, "중복된 카카오ID 입니다."),
 
-    EMAIL_ALREADY_EXIST_(401, "중복된 이메일입니다."),
+    EMAIL_ALREADY_EXIST(401, "중복된 이메일입니다."),
 
     AUTHENTICATION_NOT_HAVE(401, "권한이 없습니다."),
 

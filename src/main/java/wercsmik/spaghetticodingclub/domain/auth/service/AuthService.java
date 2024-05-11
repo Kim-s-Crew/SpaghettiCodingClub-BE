@@ -29,7 +29,7 @@ public class AuthService {
 
         // 이메일 중복확인
         if (userRepository.findByEmail(signRequestDTO.getEmail()).isPresent()) {
-            throw new CustomException(ErrorCode.EMAIL_ALREADY_EXIST_);
+            throw new CustomException(ErrorCode.EMAIL_ALREADY_EXIST);
         }
 
         // 비밀번호 != 비밀번호 확인
