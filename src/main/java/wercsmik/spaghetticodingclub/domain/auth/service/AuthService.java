@@ -18,7 +18,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public void Signup(SignRequestDTO signRequestDTO) {
+    public void signup(SignRequestDTO signRequestDTO) {
 
         String username = signRequestDTO.getUsername();
         String email = signRequestDTO.getEmail();
