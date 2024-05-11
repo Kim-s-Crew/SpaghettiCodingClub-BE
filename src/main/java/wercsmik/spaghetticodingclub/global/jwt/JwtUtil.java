@@ -14,8 +14,6 @@ import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -34,8 +32,6 @@ public class JwtUtil {
     public static final long ACCESS_TOKEN_TIME = 60 * 60 * 1000L; // 60분
 
     public static final long REFRESH_TOKEN_TIME = 60 * 60 * 24 * 30 * 1000L; // 30일
-
-    private static final Logger logger = LoggerFactory.getLogger("JWT 로그");
 
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
