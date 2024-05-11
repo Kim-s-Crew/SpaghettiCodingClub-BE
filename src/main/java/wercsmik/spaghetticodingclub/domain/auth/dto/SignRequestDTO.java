@@ -19,12 +19,14 @@ public class SignRequestDTO {
             message = "올바른 형식의 비밀번호가 아닙니다. 문자(대문자/소문자) 혹은 숫자를 4글자 이상 작성해주세요.")
     private String password;
 
+    @NotBlank
+    @Pattern(regexp = "^[a-zA-Z0-9]{4,}$",
+            message = "올바른 형식의 비밀번호가 아닙니다. 문자(대문자/소문자) 혹은 숫자를 4글자 이상 작성해주세요.")
     private String checkPassword;
 
     @NotBlank
     @Pattern(regexp = "^[a-zA-Z0-9]+@[a-zA-Z0-9]+(\\.[a-zA-Z]{2,})+$",
             message = "올바른 이메일 형식이 아닙니다. 문자(대문자/소문자)@도메인으로 입력해주세요.")
-
     private String email;
 
     @Pattern(regexp = "^[a-zA-Z0-9]+@[a-zA-Z0-9]+(\\.[a-zA-Z]{2,})+$",
@@ -36,7 +38,5 @@ public class SignRequestDTO {
     private String track;
 
     private boolean admin = false;
-
-    private String adminToken = "";
 
 }
