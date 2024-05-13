@@ -5,6 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,10 +30,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(
             HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        LoginRequestDTO requestDto = null;
         try {
-            LoginRequestDTO requestDto = new ObjectMapper().readValue(
+            requestDto = new ObjectMapper().readValue(
                     request.getInputStream(),
                     LoginRequestDTO.class);
+            log.info("로그인 시도: {}", requestDto.getEmail()); // 로그인 시도 로깅 추가
 
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -42,8 +45,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                     )
             );
         } catch (IOException e) {
-            log.error(e.getMessage());
+            log.error("로그인 시도 중 에러 발생: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
+        } catch (AuthenticationException e) {
+            log.info("옳지않은 비밀번호: {}", Objects.requireNonNull(requestDto).getPassword()); // 비밀번호가 틀렸을 때 로깅 추가
+            throw e;
         }
     }
 
