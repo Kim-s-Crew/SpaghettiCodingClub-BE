@@ -1,5 +1,5 @@
 PROJECT_ROOT="/home/ubuntu/app"
-JAR_FILE="$PROJECT_ROOT/build/libs/SpaghettiCodingClub-0.0.1-SNAPSHOT.jar"
+JAR_FILE="$PROJECT_ROOT/kims-spaghetti.jar"
 
 APP_LOG="$PROJECT_ROOT/application.log"
 ERROR_LOG="$PROJECT_ROOT/error.log"
