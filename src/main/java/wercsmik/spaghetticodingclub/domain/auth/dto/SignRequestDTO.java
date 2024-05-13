@@ -37,6 +37,4 @@ public class SignRequestDTO {
             message = "존재하지 않은 트랙입니다. 문자(대문자/소문자) 혹은 숫자를 4글자 이상 10글자 이하로 작성해주세요.")
     private String track;
 
-    private boolean admin = false;
-
 }
