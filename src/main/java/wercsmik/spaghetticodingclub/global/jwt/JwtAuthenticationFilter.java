@@ -12,6 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import wercsmik.spaghetticodingclub.domain.auth.dto.LoginRequestDTO;
+import wercsmik.spaghetticodingclub.domain.auth.dto.LoginResponseDTO;
+import wercsmik.spaghetticodingclub.domain.user.entity.User;
 import wercsmik.spaghetticodingclub.domain.user.entity.UserRoleEnum;
 import wercsmik.spaghetticodingclub.global.common.CommonResponse;
 import wercsmik.spaghetticodingclub.global.security.UserDetailsImpl;
@@ -62,15 +64,19 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             HttpServletResponse response, FilterChain chain, Authentication authResult)
             throws IOException {
         log.info("로그인 성공 및 JWT 생성");
-        String username = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getEmail();
-        UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
 
-        String accessToken = jwtUtil.createAccessToken(username, role);
+        User user = ((UserDetailsImpl) authResult.getPrincipal()).getUser();
+        String email = user.getEmail();
+        UserRoleEnum role = user.getRole();
+
+        String accessToken = jwtUtil.createAccessToken(email, role);
 
         jwtUtil.addJwtToHeader(accessToken, response);
 
+        LoginResponseDTO loginResponseDTO = new LoginResponseDTO(user);
+
         // CommonResponse 객체 생성
-        CommonResponse commonResponse = CommonResponse.of("로그인 성공", null);
+        CommonResponse<LoginResponseDTO> commonResponse = CommonResponse.of("로그인 성공", loginResponseDTO);
 
         writeResponse(response, commonResponse);
     }
