@@ -19,6 +19,10 @@ import wercsmik.spaghetticodingclub.global.security.UserDetailsImpl;
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
+    private static final String CONTENT_TYPE = "application/json";
+
+    private static final String CHARACTER_ENCODING = "UTF-8";
+
     private final JwtUtil jwtUtil;
 
     public JwtAuthenticationFilter(JwtUtil jwtUtil) {
@@ -63,40 +67,33 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String accessToken = jwtUtil.createAccessToken(username, role);
 
+        jwtUtil.addJwtToHeader(accessToken, response);
+
         // CommonResponse 객체 생성
         CommonResponse commonResponse = CommonResponse.of("로그인 성공", null);
 
-        // ObjectMapper를 사용하여 CommonResponse 객체를 JSON 문자열로 변환
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonResponse = objectMapper.writeValueAsString(commonResponse);
-
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(jsonResponse);
-
-        // JWT를 헤더에 추가
-        jwtUtil.addJwtToHeader(accessToken, response);
+        writeResponse(response, commonResponse);
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request,
             HttpServletResponse response, AuthenticationException failed) throws IOException {
         log.info("로그인 실패");
-        // 상태 코드 설정
+
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
-        // 응답 형식 설정
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-
-        // CommonResponse 객체 생성
         CommonResponse commonResponse = CommonResponse.of("로그인 실패", null);
 
-        // ObjectMapper를 사용해 CommonResponse 객체를 JSON 문자열로 변환
+        writeResponse(response, commonResponse);
+    }
+
+    private void writeResponse(HttpServletResponse response, CommonResponse commonResponse) throws IOException {
+        response.setContentType(CONTENT_TYPE);
+        response.setCharacterEncoding(CHARACTER_ENCODING);
+
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonResponse = objectMapper.writeValueAsString(commonResponse);
 
-        // 응답 본문에 JSON 문자열 작성
         response.getWriter().write(jsonResponse);
         response.getWriter().flush();
     }
