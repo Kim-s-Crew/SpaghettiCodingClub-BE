@@ -8,18 +8,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "users")
 public class User {
 
@@ -46,7 +42,8 @@ public class User {
     @Column
     private String track;
 
-    public User (String username, String password, String email, String track, String refereeEmail, UserRoleEnum role) {
+    @Builder
+    private User(String username, String password, String email, String track, String refereeEmail, UserRoleEnum role) {
         this.username = username;
         this.password = password;
         this.email = email;

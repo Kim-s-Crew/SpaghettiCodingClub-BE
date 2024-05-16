@@ -45,7 +45,14 @@ public class AuthService {
             role = UserRoleEnum.ADMIN;
         }
 
-        User user = new User(username, encodePassword, email, track, refereeEmail, role);
+        User user = User.builder()
+                .username(username)
+                .password(encodePassword)
+                .email(email)
+                .track(track)
+                .refereeEmail(refereeEmail)
+                .role(role)
+                .build();
         userRepository.save(user);
     }
 }
