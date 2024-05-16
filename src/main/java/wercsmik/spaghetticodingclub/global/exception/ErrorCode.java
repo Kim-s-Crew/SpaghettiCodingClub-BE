@@ -20,7 +20,7 @@ public enum ErrorCode {
 
     PASSWORD_CONFIRMATION_NOT_MATCH(401, "비밀번호와 비밀번호 확인이 일치하지 않습니다."),
 
-    USER_NOT_FOUND(400, "해당 유저가 존재하지 않습니다"),
+    USER_NOT_FOUND(400, "해당 유저가 존재하지 않습니다."),
 
     EMAIL_VERIFICATION_CODE_INVALID(400, "입력하신 이메일 인증 코드가 유효하지 않습니다"),
 
