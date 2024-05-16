@@ -31,8 +31,6 @@ public class JwtUtil {
 
     public static final long ACCESS_TOKEN_TIME = 60 * 60 * 1000L; // 60분
 
-    public static final long REFRESH_TOKEN_TIME = 60 * 60 * 24 * 30 * 1000L; // 30일
-
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
 

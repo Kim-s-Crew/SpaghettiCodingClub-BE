@@ -19,7 +19,7 @@ public class ProfileResponseDTO {
 
     private UserRoleEnum role;
 
-    private String refereeEmail;
+    private String recommendEmail;
 
     public ProfileResponseDTO(User user) {
 
@@ -33,6 +33,6 @@ public class ProfileResponseDTO {
 
         this.role = user.getRole();
 
-        this.refereeEmail = user.getRefereeEmail();
+        this.recommendEmail = user.getRecommendEmail();
     }
 }

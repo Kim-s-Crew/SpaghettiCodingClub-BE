@@ -33,7 +33,7 @@ public class User {
     private String email;
 
     @Column
-    private String refereeEmail;
+    private String recommendEmail;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
@@ -43,12 +43,12 @@ public class User {
     private String track;
 
     @Builder
-    private User(String username, String password, String email, String track, String refereeEmail, UserRoleEnum role) {
+    private User(String username, String password, String email, String track, String recommendEmail, UserRoleEnum role) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.track = track;
-        this.refereeEmail = refereeEmail;
+        this.recommendEmail = recommendEmail;
         this.role = role;
     }
 }

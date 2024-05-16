@@ -10,18 +10,15 @@ import lombok.Setter;
 public class SignRequestDTO {
 
     @NotBlank
-    @Pattern(regexp = "^[a-zA-Z0-9]{4,10}$",
-            message = "올바른 형식의 아이디가 아닙니다. 문자(대문자/소문자) 혹은 숫자를 4글자 이상 10글자 이하로 작성해주세요.")
+    @Pattern(regexp = "^[a-zA-Z0-9]{1,10}$",
+            message = "올바른 형식의 아이디가 아닙니다. 문자(대문자/소문자) 혹은 숫자를 1글자 이상 10글자 이하로 작성해주세요.")
     private String username;
 
     @NotBlank
-    @Pattern(regexp = "^[a-zA-Z0-9]{4,}$",
-            message = "올바른 형식의 비밀번호가 아닙니다. 문자(대문자/소문자) 혹은 숫자를 4글자 이상 작성해주세요.")
+    @Pattern(regexp = "^[a-zA-Z0-9]{8,}$",
+            message = "올바른 형식의 비밀번호가 아닙니다. 문자(대문자/소문자) 혹은 숫자를 8글자 이상 작성해주세요.")
     private String password;
 
-    @NotBlank
-    @Pattern(regexp = "^[a-zA-Z0-9]{4,}$",
-            message = "올바른 형식의 비밀번호가 아닙니다. 문자(대문자/소문자) 혹은 숫자를 4글자 이상 작성해주세요.")
     private String checkPassword;
 
     @NotBlank
@@ -31,10 +28,8 @@ public class SignRequestDTO {
 
     @Pattern(regexp = "^[a-zA-Z0-9]+@[a-zA-Z0-9]+(\\.[a-zA-Z]{2,})+$",
             message = "올바른 이메일 형식이 아닙니다. 문자(대문자/소문자)@도메인으로 입력해주세요.")
-    private String refereeEmail;
+    private String recommendEmail;
 
-    @Pattern(regexp = "^[a-zA-Z0-9]{4,10}$",
-            message = "존재하지 않은 트랙입니다. 문자(대문자/소문자) 혹은 숫자를 4글자 이상 10글자 이하로 작성해주세요.")
     private String track;
 
 }

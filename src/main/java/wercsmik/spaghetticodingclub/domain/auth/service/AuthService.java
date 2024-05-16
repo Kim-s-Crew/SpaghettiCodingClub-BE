@@ -25,7 +25,7 @@ public class AuthService {
         String password = signRequestDTO.getPassword();
         String checkPassword = signRequestDTO.getCheckPassword();
         String track = signRequestDTO.getTrack();
-        String refereeEmail = signRequestDTO.getRefereeEmail();
+        String recommendEmail = signRequestDTO.getRecommendEmail();
 
         // 이메일 중복확인
         if (userRepository.findByEmail(signRequestDTO.getEmail()).isPresent()) {
@@ -40,8 +40,8 @@ public class AuthService {
         String encodePassword = passwordEncoder.encode(password);
 
         UserRoleEnum role = UserRoleEnum.USER; // 기본적으로 USER로 설정
-        // refereeEmail 값이 null이 아니고 빈 문자열이 아닐 경우에만 ADMIN 설정
-        if(refereeEmail != null && !refereeEmail.trim().isEmpty()) {
+        // recommendEmail 값이 null이 아니고 빈 문자열이 아닐 경우에만 ADMIN 설정
+        if(recommendEmail != null && !recommendEmail.trim().isEmpty()) {
             role = UserRoleEnum.ADMIN;
         }
 
@@ -50,7 +50,7 @@ public class AuthService {
                 .password(encodePassword)
                 .email(email)
                 .track(track)
-                .refereeEmail(refereeEmail)
+                .recommendEmail(recommendEmail)
                 .role(role)
                 .build();
         userRepository.save(user);
