@@ -12,8 +12,6 @@ public enum ErrorCode {
 
     USERNAME_ALREADY_EXIST(401, "중복된 유저네임입니다."),
 
-    KAKAOID_ALREADY_EXIST(401, "중복된 카카오ID 입니다."),
-
     EMAIL_ALREADY_EXIST(401, "중복된 이메일입니다."),
 
     NO_AUTHENTICATION(401, "권한이 없습니다."),
@@ -23,8 +21,6 @@ public enum ErrorCode {
     USER_NOT_FOUND(400, "해당 유저가 존재하지 않습니다."),
 
     EMAIL_VERIFICATION_CODE_INVALID(400, "입력하신 이메일 인증 코드가 유효하지 않습니다"),
-
-    KAKAO_USER_EMAIL_MODIFICATION_EXCEPTION(400, "카카오 로그인한 유저는 이메일을 수정할 수 없습니다."),
 
     // Scheduler
 
