@@ -27,7 +27,7 @@ cp $PROJECT_ROOT/build/libs/*.jar $JAR_FILE
 
 # jar 파일 실행
 echo "$TIME_NOW > $JAR_FILE 파일 실행" >> $DEPLOY_LOG
-nohup env PROD_DB_URL=$PROD_DB_URL PROD_DB_USER=$PROD_DB_USER PROD_DB_PASSWORD=$PROD_DB_PASSWORD JWT_SECRET_KEY=$JWT_SECRET_KEY java -jar $JAR_FILE > $APP_LOG 2> $ERROR_LOG &
+nohup java -jar $JAR_FILE > $APP_LOG 2> $ERROR_LOG &
 
 # 현재 실행중인 프로세스 ID 출력
 CURRENT_PID=$(pgrep -f $JAR_FILE)
