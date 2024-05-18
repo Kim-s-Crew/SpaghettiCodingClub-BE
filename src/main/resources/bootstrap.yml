@@ -1,12 +1,13 @@
 spring:
   application:
     name: spaghetti-app
-
-cloud:
-  aws:
-    region:
-      static: ap-northeast-2
-    credentials:
-      profile-name: default
-  config:
-    import: aws-parameterstore:/prod/spaghetti-app/
+  cloud:
+    aws:
+      region:
+        static: ap-northeast-2
+      credentials:
+        profile-name: default
+    config:
+      enabled: true
+      parameterstore:
+        enabled: true
