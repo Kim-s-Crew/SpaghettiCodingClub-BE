@@ -21,9 +21,22 @@ echo "JWT_SECRET_KEY=$JWT_SECRET_KEY"
 
 TIME_NOW=$(date +%c)
 
+# 기존 애플리케이션 종료
+CURRENT_PID=$(pgrep -f $JAR_FILE)
+if [ -n "$CURRENT_PID" ]; then
+    echo "$TIME_NOW > 기존 애플리케이션 종료: $CURRENT_PID" >> $DEPLOY_LOG
+    kill -15 $CURRENT_PID
+    sleep 5
+fi
+
 # build 파일 복사
-echo "$TIME_NOW > $JAR_FILE 파일 복사" >> $DEPLOY_LOG
-cp $PROJECT_ROOT/build/libs/*.jar $JAR_FILE
+BUILD_JAR=$(ls $PROJECT_ROOT/build/libs/*.jar)
+if [ -z "$BUILD_JAR" ]; then
+    echo "$TIME_NOW > 빌드 파일이 존재하지 않습니다." >> $DEPLOY_LOG
+    exit 1
+fi
+echo "$TIME_NOW > $BUILD_JAR 파일 복사" >> $DEPLOY_LOG
+cp $BUILD_JAR $JAR_FILE
 
 # jar 파일 실행
 echo "$TIME_NOW > $JAR_FILE 파일 실행" >> $DEPLOY_LOG
