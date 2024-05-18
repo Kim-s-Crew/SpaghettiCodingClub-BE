@@ -35,12 +35,12 @@ public class JwtUtil {
 
 
     @Value("${JWT_SECRET_KEY}")
-    private String secretKey;
+    private String jwtSecretKey;
     private Key key;
 
     @PostConstruct
     public void init() {
-        byte[] bytes = Base64.getDecoder().decode(secretKey);
+        byte[] bytes = Base64.getDecoder().decode(jwtSecretKey);
         key = Keys.hmacShaKeyFor(bytes);
     }
 
