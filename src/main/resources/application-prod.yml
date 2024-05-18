@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${prod.spaghetti-app.db.url}
-    username: ${prod.spaghetti-app.db.user}
-    password: ${prod.spaghetti-app.db.password}
+    url: ${/prod/spaghetti-app/db/url}
+    username: ${/prod/spaghetti-app/db/user}
+    password: ${/prod/spaghetti-app/db/password}
   jpa:
     hibernate:
       ddl-auto: update
@@ -10,17 +10,4 @@ spring:
 
 jwt:
   secret:
-    key: ${prod.spaghetti-app.jwt.secret}
-
-cloud:
-  aws:
-    region:
-      static: ap-northeast-2
-    stack:
-      auto: false
-    credentials:
-      profile-name: default
-  config:
-    enabled: true
-    parameterstore:
-      enabled: true
+    key: ${/prod/spaghetti-app/jwt/secret}
