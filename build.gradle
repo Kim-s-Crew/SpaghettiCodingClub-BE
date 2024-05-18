@@ -33,6 +33,10 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 
+    // AWS Parameter Store
+    implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.1.0")
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-parameter-store'
+
     // Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
@@ -47,6 +51,16 @@ dependencies {
     compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+
+    // AWS SDK
+    implementation 'com.amazonaws:aws-java-sdk-ssm:1.12.31'
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws-parameter-store-config'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:Hoxton.SR8"
+    }
 }
 
 tasks.named('test') {
