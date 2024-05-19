@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${db/url}
-    username: ${db/user}
-    password: ${db/password}
+    url: ${/prod/spaghetti-app/db/url}
+    username: ${/prod/spaghetti-app/db/user}
+    password: ${/prod/spaghetti-app/db/password}
   jpa:
     hibernate:
       ddl-auto: update
@@ -11,9 +11,17 @@ spring:
 
 jwt:
   secret:
-    key: ${jwt/secret}
+    key: ${/prod/spaghetti-app/jwt/secret}
 
 aws:
   paramstore:
     enabled: true
     prefix: /prod/spaghetti-app
+    name: spaghetti-app
+
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2 # AWS 리전
+    credentials:
+      instanceProfile: true # EC2 인스턴스 프로파일 사용
