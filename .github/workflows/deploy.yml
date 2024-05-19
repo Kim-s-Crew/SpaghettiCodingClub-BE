@@ -41,17 +41,21 @@ jobs:
 
       # (4) AWS 인증 (IAM 사용자 Access Key, Secret Key 활용)
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
-          prod-db-url: ${{ secrets.PROD_DB_URL }}
-          prod-db-user: ${{ secrets.PROD_DB_USER }}
-          prod-db-password: ${{ secrets.PROD_DB_PASSWORD }}
-          jwt-secret-key: ${{ secrets.JWT_SECRET_KEY }}
 
-      # (5) 빌드 결과물을 S3 버킷에 업로드
+      # (5) 환경 변수 설정
+      - name: Set environment variables
+        run: |
+          echo "PROD_DB_URL=${{ secrets.PROD_DB_URL }}" >> $GITHUB_ENV
+          echo "PROD_DB_USER=${{ secrets.PROD_DB_USER }}" >> $GITHUB_ENV
+          echo "PROD_DB_PASSWORD=${{ secrets.PROD_DB_PASSWORD }}" >> $GITHUB_ENV
+          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> $GITHUB_ENV
+
+      # (6) 빌드 결과물을 S3 버킷에 업로드
       - name: Upload to AWS S3
         run: |
           aws deploy push \
@@ -60,7 +64,7 @@ jobs:
             --s3-location s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip \
             --source .
 
-      # (6) S3 버킷에 있는 파일을 대상으로 CodeDeploy 실행
+      # (7) S3 버킷에 있는 파일을 대상으로 CodeDeploy 실행
       - name: Deploy to AWS EC2 from S3
         run: |
           aws deploy create-deployment \
