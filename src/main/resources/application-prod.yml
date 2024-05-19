@@ -11,7 +11,7 @@ spring:
 
 jwt:
   secret:
-    key: ${/prod/spaghetti-app/jwt/secret}
+    key: ${secret}
 
 aws:
   paramstore:
