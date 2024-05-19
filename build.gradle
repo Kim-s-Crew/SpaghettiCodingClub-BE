@@ -11,16 +11,6 @@ java {
     sourceCompatibility = '17'
 }
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
-jar {
-    enabled = false
-}
-
 repositories {
     mavenCentral()
 }
@@ -34,9 +24,9 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
 
     // AWS Parameter Store
-    implementation(platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.1.0"))
-    implementation("io.awspring.cloud:spring-cloud-aws-starter")
-    implementation("io.awspring.cloud:spring-cloud-aws-starter-parameter-store")
+    implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.1.0")
+    implementation "io.awspring.cloud:spring-cloud-aws-starter"
+    implementation "io.awspring.cloud:spring-cloud-aws-autoconfigure" // 변경된 의존성
 
     // Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
