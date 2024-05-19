@@ -7,6 +7,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
     show-sql: true
 
 jwt:
@@ -14,7 +17,7 @@ jwt:
     key: ${JWT_SECRET_KEY}
 
 aws:
-  paramstore:
+  param-store:
     enabled: true
     prefix: /prod/spaghetti-app
     name: spaghetti-app
@@ -24,4 +27,4 @@ cloud:
     region:
       static: ap-northeast-2 # AWS 리전
     credentials:
-      instanceProfile: true # EC2 인스턴스 프로파일 사용
+      use-instance-profile: true # EC2 인스턴스 프로파일 사용
