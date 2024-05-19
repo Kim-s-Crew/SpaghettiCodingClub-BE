@@ -13,11 +13,13 @@ export PROD_DB_USER=$(aws ssm get-parameter --name "/prod/spaghetti-app/db/user"
 export PROD_DB_PASSWORD=$(aws ssm get-parameter --name "/prod/spaghetti-app/db/password" --with-decryption --query "Parameter.Value" --output text)
 export JWT_SECRET_KEY=$(aws ssm get-parameter --name "/prod/spaghetti-app/jwt/secret" --with-decryption --query "Parameter.Value" --output text)
 
-# 환경 변수 출력하여 확인
-echo "PROD_DB_URL=$PROD_DB_URL"
-echo "PROD_DB_USER=$PROD_DB_USER"
-echo "PROD_DB_PASSWORD=$PROD_DB_PASSWORD"
-echo "JWT_SECRET_KEY=$JWT_SECRET_KEY"
+# 환경 변수 설정 확인
+{
+  echo "PROD_DB_URL=$PROD_DB_URL"
+  echo "PROD_DB_USER=$PROD_DB_USER"
+  echo "PROD_DB_PASSWORD=$PROD_DB_PASSWORD"
+  echo "JWT_SECRET_KEY=$JWT_SECRET_KEY"
+} >> $DEPLOY_LOG
 
 TIME_NOW=$(date +%c)
 
