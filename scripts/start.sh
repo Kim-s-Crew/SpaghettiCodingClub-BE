@@ -8,7 +8,7 @@ ERROR_LOG="$PROJECT_ROOT/error.log"
 DEPLOY_LOG="$PROJECT_ROOT/deploy.log"
 
 # AWS CLI를 사용하여 AWS Systems Manager Parameter Store에서 파라미터 값을 불러옵니다
-PROD_DB_URL=$(aws ssm get-parameter --name "/prod/spaghetti-app/db/url" --with-decryption --query "Parameter.Value" --output text)
+PROD_DB_URL=$(aws ssm get-parameter --name "/prod/spaghetti-app/PROD_DB_URL" --with-decryption --query "Parameter.Value" --output text)
 export PROD_DB_URL
 
 PROD_DB_USER=$(aws ssm get-parameter --name "/prod/spaghetti-app/db/user" --with-decryption --query "Parameter.Value" --output text)
