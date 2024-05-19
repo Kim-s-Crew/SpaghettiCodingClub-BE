@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${/prod/spaghetti-app/db/url}
-    username: ${/prod/spaghetti-app/db/user}
-    password: ${/prod/spaghetti-app/db/password}
+    url: ${url}
+    username: ${user}
+    password: ${password}
   jpa:
     hibernate:
       ddl-auto: update
