@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${url}
-    username: ${user}
-    password: ${password}
+    url: ${PROD_DB_URL}
+    username: ${PROD_DB_USER}
+    password: ${PROD_DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
@@ -11,7 +11,7 @@ spring:
 
 jwt:
   secret:
-    key: ${secret}
+    key: ${JWT_SECRET_KEY}
 
 aws:
   paramstore:
