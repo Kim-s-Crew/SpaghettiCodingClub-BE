@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${db_url}  # AWS Parameter Store에서 불러온 값
-    username: ${db_user}  # AWS Parameter Store에서 불러온 값
-    password: ${db_password}  # AWS Parameter Store에서 불러온 값
+    url: ${db/url}
+    username: ${db/user}
+    password: ${db/password}
   jpa:
     hibernate:
       ddl-auto: update
