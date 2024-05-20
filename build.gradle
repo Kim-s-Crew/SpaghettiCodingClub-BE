@@ -25,8 +25,10 @@ dependencies {
 
     // AWS Parameter Store
     implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.1.0")
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-parameter-store'
     implementation "io.awspring.cloud:spring-cloud-aws-starter"
-    implementation "io.awspring.cloud:spring-cloud-aws-autoconfigure" // 변경된 의존성
+    implementation "io.awspring.cloud:spring-cloud-aws-autoconfigure"
+    implementation 'com.amazonaws:aws-java-sdk-ssm:1.12.118'
 
     // Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
