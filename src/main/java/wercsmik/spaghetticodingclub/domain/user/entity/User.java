@@ -51,4 +51,8 @@ public class User {
         this.recommendEmail = recommendEmail;
         this.role = role;
     }
+
+    public void setPassword(String updatePassword) {
+        this.password = updatePassword;
+    }
 }
