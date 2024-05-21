@@ -1,9 +1,14 @@
+config:
+  type: aws-parameterstore:/config/spaghetti/
+
 spring:
+  config:
+    import: ${config.type}
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${PROD_DB_URL}
-    username: ${PROD_DB_USER}
-    password: ${PROD_DB_PASSWORD}
+    url: ${jdbc.url}
+    username: ${jdbc.username}
+    password: ${jdbc.password}
   jpa:
     hibernate:
       ddl-auto: update
@@ -14,4 +19,4 @@ spring:
 
 jwt:
   secret:
-    key: ${JWT_SECRET_KEY}  # AWS Parameter Store에서 불러온 값
+    key: ${JWT_SECRET_KEY}

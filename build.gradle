@@ -29,7 +29,6 @@ dependencies {
     implementation "io.awspring.cloud:spring-cloud-aws-starter"
     implementation "io.awspring.cloud:spring-cloud-aws-autoconfigure"
     implementation 'com.amazonaws:aws-java-sdk-ssm:1.12.118'
-    implementation 'org.springframework.cloud:spring-cloud-starter-aws'
 
     // Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
