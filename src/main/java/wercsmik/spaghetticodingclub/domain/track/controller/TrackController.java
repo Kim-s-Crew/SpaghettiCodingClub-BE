@@ -2,9 +2,9 @@ package wercsmik.spaghetticodingclub.domain.track.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import wercsmik.spaghetticodingclub.domain.track.dto.TrackRequestDTO;
 import wercsmik.spaghetticodingclub.domain.track.dto.TrackResponseDTO;
 import wercsmik.spaghetticodingclub.domain.track.service.TrackService;
 import wercsmik.spaghetticodingclub.global.auditing.BaseTimeEntity;
@@ -18,6 +18,16 @@ import java.util.List;
 public class TrackController extends BaseTimeEntity {
 
     private final TrackService trackService;
+
+    @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<CommonResponse<TrackResponseDTO>> createTrack(
+            @RequestBody TrackRequestDTO trackRequestDTO) {
+
+        TrackResponseDTO createdTrack = trackService.createTrack(trackRequestDTO);
+
+        return ResponseEntity.ok().body(CommonResponse.of("트랙 생성 성공", createdTrack));
+    }
 
     @GetMapping
     public ResponseEntity<CommonResponse<List<TrackResponseDTO>>> getAllTracks() {

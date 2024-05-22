@@ -1,12 +1,16 @@
 package wercsmik.spaghetticodingclub.domain.track.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import wercsmik.spaghetticodingclub.global.auditing.BaseTimeEntity;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @RequiredArgsConstructor
 public class Track extends BaseTimeEntity {
 

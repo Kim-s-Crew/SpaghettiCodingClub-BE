@@ -17,12 +17,13 @@ public class TrackParticipants {
 
     @MapsId("userId") // TrackParticipantId의 userId 필드를 매핑
     @ManyToOne
+    // TODO: merge 후, referencedColumnName = "userId"로 변경
     @JoinColumn(name = "userId", referencedColumnName = "id")
     private User user;
 
     @MapsId("trackId") // TrackParticipantId의 trackId 필드를 매핑
     @ManyToOne
-    @JoinColumn(name = "trackId", referencedColumnName = "id")
+    @JoinColumn(name = "trackId", referencedColumnName = "trackId")
     private Track track;
 
     @Column(nullable = false)

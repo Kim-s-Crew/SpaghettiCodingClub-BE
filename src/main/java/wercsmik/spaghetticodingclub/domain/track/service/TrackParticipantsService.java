@@ -16,7 +16,9 @@ public class TrackParticipantsService {
     private final TrackParticipantsRepository trackParticipantsRepository;
 
     public List<TrackParticipantResponseDTO> getParticipantsByTrack(Long trackId) {
-        List<TrackParticipants> participants = trackParticipantsRepository.findByTrackId(trackId);
+
+        List<TrackParticipants> participants = trackParticipantsRepository.findByTrackTrackId(trackId);
+
         return participants.stream()
                 .map(participant -> new TrackParticipantResponseDTO(
                         participant.getUser().getId(),

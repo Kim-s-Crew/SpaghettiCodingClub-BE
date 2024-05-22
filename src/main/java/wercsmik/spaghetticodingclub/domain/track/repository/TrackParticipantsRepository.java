@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface TrackParticipantsRepository extends JpaRepository<TrackParticipants, TrackParticipantId> {
 
-    List<TrackParticipants> findByTrackId(Long trackId);
+    List<TrackParticipants> findByTrackTrackId(Long trackId);
 }
