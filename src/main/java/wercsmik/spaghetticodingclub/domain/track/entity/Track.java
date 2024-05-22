@@ -12,16 +12,8 @@ public class Track extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long trackId;
 
     @Column(nullable = false, length = 50)
     private String trackName;
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setTrackName(String trackName) {
-        this.trackName = trackName;
-    }
 }

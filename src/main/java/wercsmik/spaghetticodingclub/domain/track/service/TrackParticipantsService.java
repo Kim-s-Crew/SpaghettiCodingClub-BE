@@ -21,7 +21,7 @@ public class TrackParticipantsService {
                 .map(participant -> new TrackParticipantResponseDTO(
                         participant.getUser().getId(),
                         participant.getUser().getUsername(),
-                        participant.getTrack().getId(),
+                        participant.getTrack().getTrackId(),
                         participant.getJoinedAt()))
                 .collect(Collectors.toList());
     }
