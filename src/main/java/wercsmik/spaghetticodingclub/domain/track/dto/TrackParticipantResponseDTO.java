@@ -15,5 +15,7 @@ public class TrackParticipantResponseDTO {
 
     private Long trackId;
 
+    private String trackName;
+
     private LocalDateTime joinedAt;
 }

@@ -2,19 +2,22 @@ package wercsmik.spaghetticodingclub.domain.track.entity;
 
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
 @Getter
+@NoArgsConstructor
 public class TrackParticipantId implements Serializable {
 
     private Long userId;
-
     private Long trackId;
 
-    public TrackParticipantId() {
+    public TrackParticipantId(Long userId, Long trackId) {
+        this.userId = userId;
+        this.trackId = trackId;
     }
 
     @Override

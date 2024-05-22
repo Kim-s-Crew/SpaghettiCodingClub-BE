@@ -1,6 +1,5 @@
 package wercsmik.spaghetticodingclub.domain.track.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import wercsmik.spaghetticodingclub.domain.track.dto.TrackParticipantResponseDTO;
@@ -13,6 +12,7 @@ import wercsmik.spaghetticodingclub.domain.user.repository.UserRepository;
 import wercsmik.spaghetticodingclub.global.exception.CustomException;
 import wercsmik.spaghetticodingclub.global.exception.ErrorCode;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,6 +37,7 @@ public class TrackParticipantsService {
         TrackParticipants participant = TrackParticipants.builder()
                 .user(user)
                 .track(track)
+                .joinedAt(LocalDateTime.now())
                 .build();
 
         trackParticipantsRepository.save(participant);
@@ -51,6 +52,7 @@ public class TrackParticipantsService {
                         participant.getUser().getId(),
                         participant.getUser().getUsername(),
                         participant.getTrack().getTrackId(),
+                        participant.getTrack().getTrackName(),
                         participant.getJoinedAt()))
                 .collect(Collectors.toList());
     }

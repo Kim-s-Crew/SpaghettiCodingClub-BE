@@ -1,6 +1,7 @@
 package wercsmik.spaghetticodingclub.domain.track.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import wercsmik.spaghetticodingclub.domain.user.entity.User;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Builder
 @RequiredArgsConstructor
 public class TrackParticipants {
 
@@ -29,14 +31,22 @@ public class TrackParticipants {
     @Column(nullable = false)
     private LocalDateTime joinedAt;
 
-    public static TrackParticipantsBuilder builder() {
-        return new TrackParticipantsBuilder();
-    }
-
     public static class TrackParticipantsBuilder {
+        private Long userId;
+        private Long trackId;
         private User user;
         private Track track;
         private LocalDateTime joinedAt;
+
+        public TrackParticipantsBuilder userId(Long userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public TrackParticipantsBuilder trackId(Long trackId) {
+            this.trackId = trackId;
+            return this;
+        }
 
         public TrackParticipantsBuilder user(User user) {
             this.user = user;
@@ -55,6 +65,7 @@ public class TrackParticipants {
 
         public TrackParticipants build() {
             TrackParticipants trackParticipants = new TrackParticipants();
+            trackParticipants.id = new TrackParticipantId(this.userId, this.trackId); // TrackParticipantId 초기화
             trackParticipants.user = this.user;
             trackParticipants.track = this.track;
             trackParticipants.joinedAt = this.joinedAt;
