@@ -27,6 +27,9 @@ public enum ErrorCode {
     // Team
 
     // Track
+    USER_ALREADY_PARTICIPANT(400, "이미 트랙 참여자입니다."),
+
+    TRACK_NOT_FOUND(400, "트랙을 찾을 수 없습니다."),
 
     // Unlike
 
