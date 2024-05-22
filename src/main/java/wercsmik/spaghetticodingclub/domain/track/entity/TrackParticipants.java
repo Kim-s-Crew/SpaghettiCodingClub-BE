@@ -4,25 +4,60 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import wercsmik.spaghetticodingclub.domain.user.entity.User;
-import wercsmik.spaghetticodingclub.global.auditing.BaseTimeEntity;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @RequiredArgsConstructor
-public class TrackParticipants extends BaseTimeEntity {
+public class TrackParticipants {
 
-    @Id
+    @EmbeddedId
+    private TrackParticipantId id;
+
+    @MapsId("userId") // TrackParticipantId의 userId 필드를 매핑
     @ManyToOne
-    @JoinColumn(name="userId", nullable = false)
+    @JoinColumn(name = "userId", referencedColumnName = "id")
     private User user;
 
-    @Id
+    @MapsId("trackId") // TrackParticipantId의 trackId 필드를 매핑
     @ManyToOne
-    @JoinColumn(name="trackId", nullable = false)
+    @JoinColumn(name = "trackId", referencedColumnName = "id")
     private Track track;
 
     @Column(nullable = false)
     private LocalDateTime joinedAt;
+
+    public static TrackParticipantsBuilder builder() {
+        return new TrackParticipantsBuilder();
+    }
+
+    public static class TrackParticipantsBuilder {
+        private User user;
+        private Track track;
+        private LocalDateTime joinedAt;
+
+        public TrackParticipantsBuilder user(User user) {
+            this.user = user;
+            return this;
+        }
+
+        public TrackParticipantsBuilder track(Track track) {
+            this.track = track;
+            return this;
+        }
+
+        public TrackParticipantsBuilder joinedAt(LocalDateTime joinedAt) {
+            this.joinedAt = joinedAt;
+            return this;
+        }
+
+        public TrackParticipants build() {
+            TrackParticipants trackParticipants = new TrackParticipants();
+            trackParticipants.user = this.user;
+            trackParticipants.track = this.track;
+            trackParticipants.joinedAt = this.joinedAt;
+            return trackParticipants;
+        }
+    }
 }
