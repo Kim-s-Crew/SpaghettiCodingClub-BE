@@ -23,7 +23,7 @@ public class LoginResponseDTO {
 
     public LoginResponseDTO(User user) {
 
-        this.userId = user.getId();
+        this.userId = user.getUserId();
 
         this.username = user.getUsername();
 
