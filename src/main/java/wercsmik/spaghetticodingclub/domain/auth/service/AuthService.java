@@ -58,7 +58,9 @@ public class AuthService {
                 .build();
         userRepository.save(user);
 
-        // 사용자를 트랙참여자에 추가
-        trackParticipantsService.addParticipant(user.getUserId(), user.getTrack());
+        // recommendEmail이 없어서 USER로 가입한 경우에만 트랙참여자에 추가
+        if (role == UserRoleEnum.USER) {
+            trackParticipantsService.addParticipant(user.getUserId(), user.getTrack());
+        }
     }
 }
