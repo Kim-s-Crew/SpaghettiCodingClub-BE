@@ -49,11 +49,10 @@ public enum ErrorCode {
 
     UNSUPPORTED_JWT_TOKEN(401, "지원되지 않는 JWT 토큰 입니다."),
 
-    INVALID_JWT_TOKEN(401, "잘못된 JWT 토큰 입니다."),
+    INVALID_JWT_TOKEN(401, "잘못된 JWT 토큰 입니다.");
 
 
     // User
-    NOT_ADMIN(401, "관리자 권한이 필요합니다.");
 
 
     // Common

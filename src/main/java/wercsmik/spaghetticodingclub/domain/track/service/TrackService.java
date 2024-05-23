@@ -28,7 +28,7 @@ public class TrackService {
                 .getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
 
         if (!isAdmin) {
-            throw new CustomException(ErrorCode.NOT_ADMIN);
+            throw new CustomException(ErrorCode.NO_AUTHENTICATION);
         }
 
         if (trackRequestDTO.getTrackName() == null || trackRequestDTO.getTrackName().isEmpty()) {
