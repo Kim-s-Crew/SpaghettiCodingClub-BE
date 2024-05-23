@@ -11,16 +11,6 @@ java {
     sourceCompatibility = '17'
 }
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
-jar {
-    enabled = false
-}
-
 repositories {
     mavenCentral()
 }
@@ -34,9 +24,11 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
 
     // AWS Parameter Store
-    implementation(platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.1.0"))
-    implementation("io.awspring.cloud:spring-cloud-aws-starter")
-    implementation("io.awspring.cloud:spring-cloud-aws-starter-parameter-store")
+    implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.1.0")
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-parameter-store'
+    implementation "io.awspring.cloud:spring-cloud-aws-starter"
+    implementation "io.awspring.cloud:spring-cloud-aws-autoconfigure"
+    implementation 'com.amazonaws:aws-java-sdk-ssm:1.12.118'
 
     // Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -46,7 +38,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     // DB
+    implementation 'org.springframework.boot:spring-boot-starter'
     runtimeOnly 'com.mysql:mysql-connector-j'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     // JWT
     compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
@@ -62,4 +56,8 @@ dependencyManagement {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+jar {
+    enabled = false
 }
