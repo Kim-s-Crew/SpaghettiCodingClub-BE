@@ -5,7 +5,8 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
 
-    // Assesment
+    // Assessment
+
 
     // Auth
     PASSWORD_NOT_MATCH(401, "비밀번호가 일치하지 않습니다."),
@@ -24,22 +25,39 @@ public enum ErrorCode {
 
     // Scheduler
 
+
     // Team
 
+
     // Track
+    USER_ALREADY_PARTICIPANT(400, "이미 트랙 참여자입니다."),
+
+    TRACK_NOT_FOUND(400, "트랙을 찾을 수 없습니다."),
+
+    TRACK_NAME_DUPLICATED(400, "이미 존재하는 트랙입니다."),
+
+    INVALID_TRACK_NAME(400, "잘못된 트랙 이름입니다."),
+
 
     // Unlike
 
-    //Jwt
+
+    // Jwt
     INVALID_JWT_SIGNATURE(401, "유효하지 않는 JWT 서명 입니다."),
 
     EXPIRED_JWT_TOKEN(401, "만료된 JWT Token 입니다."),
 
     UNSUPPORTED_JWT_TOKEN(401, "지원되지 않는 JWT 토큰 입니다."),
 
-    INVALID_JWT_TOKEN(401, "잘못된 JWT 토큰 입니다.");
+    INVALID_JWT_TOKEN(401, "잘못된 JWT 토큰 입니다."),
+
 
     // User
+    PASSWORD_MISMATCH_EXCEPTION(401, "비밀번호가 일치하지 않습니다."),
+
+    PASSWORD_CONFIRMATION_EXCEPTION(401, "비밀번호와 비밀번호 확인이 일치하지 않습니다."),
+
+    AUTHENTICATION_MISMATCH_EXCEPTION(401, "권한이 없습니다.");
 
 
     // Common

@@ -23,7 +23,7 @@ public class ProfileResponseDTO {
 
     public ProfileResponseDTO(User user) {
 
-        this.userId = user.getId();
+        this.userId = user.getUserId();
 
         this.username = user.getUsername();
 
