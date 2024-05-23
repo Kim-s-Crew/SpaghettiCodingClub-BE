@@ -49,7 +49,7 @@ public class TrackParticipantsService {
 
         return participants.stream()
                 .map(participant -> new TrackParticipantResponseDTO(
-                        participant.getUser().getId(),
+                        participant.getUser().getUserId(),
                         participant.getUser().getUsername(),
                         participant.getTrack().getTrackId(),
                         participant.getTrack().getTrackName(),

@@ -59,6 +59,6 @@ public class AuthService {
         userRepository.save(user);
 
         // 사용자를 트랙참여자에 추가
-        trackParticipantsService.addParticipant(user.getId(), user.getTrack());
+        trackParticipantsService.addParticipant(user.getUserId(), user.getTrack());
     }
 }
