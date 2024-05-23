@@ -21,7 +21,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long userId;
 
     @Column(nullable = false)
     private String username;
@@ -36,7 +36,7 @@ public class User {
     private String recommendEmail;
 
     @Column(nullable = false)
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
 
     @Column
@@ -49,6 +49,14 @@ public class User {
         this.email = email;
         this.track = track;
         this.recommendEmail = recommendEmail;
+        this.role = role;
+    }
+
+    public void setPassword(String updatePassword) {
+        this.password = updatePassword;
+    }
+
+    public void setRole(UserRoleEnum role) {
         this.role = role;
     }
 }

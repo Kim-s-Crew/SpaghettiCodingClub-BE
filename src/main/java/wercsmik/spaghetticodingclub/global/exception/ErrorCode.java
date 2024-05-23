@@ -37,9 +37,14 @@ public enum ErrorCode {
 
     UNSUPPORTED_JWT_TOKEN(401, "지원되지 않는 JWT 토큰 입니다."),
 
-    INVALID_JWT_TOKEN(401, "잘못된 JWT 토큰 입니다.");
+    INVALID_JWT_TOKEN(401, "잘못된 JWT 토큰 입니다."),
 
     // User
+    PASSWORD_MISMATCH_EXCEPTION(401, "비밀번호가 일치하지 않습니다."),
+
+    PASSWORD_CONFIRMATION_EXCEPTION(401, "비밀번호와 비밀번호 확인이 일치하지 않습니다."),
+
+    AUTHENTICATION_MISMATCH_EXCEPTION(401, "권한이 없습니다.");
 
 
     // Common
