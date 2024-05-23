@@ -46,10 +46,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
-          prod-db-url: ${{ secrets.PROD_DB_URL }}
-          prod-db-user: ${{ secrets.PROD_DB_USER }}
-          prod-db-password: ${{ secrets.PROD_DB_PASSWORD }}
-          jwt-secret-key: ${{ secrets.JWT_SECRET_KEY }}
 
       # (5) 빌드 결과물을 S3 버킷에 업로드
       - name: Upload to AWS S3
