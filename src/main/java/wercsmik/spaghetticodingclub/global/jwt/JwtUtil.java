@@ -34,7 +34,7 @@ public class JwtUtil {
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
 
-    @Value("${JWT_SECRET_KEY}")
+    @Value("${jwt.secretKey}")
     private String jwtSecretKey;
     private Key key;
 
