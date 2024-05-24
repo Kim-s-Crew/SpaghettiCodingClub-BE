@@ -10,7 +10,7 @@ import lombok.Setter;
 public class SignRequestDTO {
 
     @NotBlank
-    @Pattern(regexp = "^[a-zA-Z0-9]{1,10}$",
+    @Pattern(regexp = "^[a-zA-Z0-9가-힣]{1,10}$",
             message = "올바른 형식의 이름이 아닙니다. 다시 한번 확인 후 작성해주세요.")
     private String username;
 
