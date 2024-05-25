@@ -1,17 +1,17 @@
 package wercsmik.spaghetticodingclub.domain.auth.service;
 
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import wercsmik.spaghetticodingclub.domain.auth.dto.SignRequestDTO;
+import wercsmik.spaghetticodingclub.domain.track.repository.TrackRepository;
 import wercsmik.spaghetticodingclub.domain.track.service.TrackParticipantsService;
 import wercsmik.spaghetticodingclub.domain.user.entity.User;
 import wercsmik.spaghetticodingclub.domain.user.entity.UserRoleEnum;
 import wercsmik.spaghetticodingclub.domain.user.repository.UserRepository;
 import wercsmik.spaghetticodingclub.global.exception.CustomException;
 import wercsmik.spaghetticodingclub.global.exception.ErrorCode;
-
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +28,7 @@ public class AuthService {
         String email = signRequestDTO.getEmail();
         String password = signRequestDTO.getPassword();
         String checkPassword = signRequestDTO.getCheckPassword();
-        String track = signRequestDTO.getTrack();
+        String trackName = signRequestDTO.getTrack();
         String recommendEmail = signRequestDTO.getRecommendEmail();
 
         // 이메일 중복확인
@@ -60,7 +60,6 @@ public class AuthService {
                 .username(username)
                 .password(encodePassword)
                 .email(email)
-                .track(track)
                 .recommendEmail(recommendEmail)
                 .role(role)
                 .build();
@@ -68,7 +67,7 @@ public class AuthService {
 
         // recommendEmail이 없어서 USER로 가입한 경우에만 트랙참여자에 추가
         if (role == UserRoleEnum.USER) {
-            trackParticipantsService.addParticipant(user.getUserId(), user.getTrack());
+            trackParticipantsService.addParticipant(user.getUserId(), trackName);
         }
     }
 }
