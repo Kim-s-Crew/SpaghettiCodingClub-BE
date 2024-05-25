@@ -1,10 +1,12 @@
 package wercsmik.spaghetticodingclub.domain.user.service;
 
-import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import wercsmik.spaghetticodingclub.domain.track.entity.TrackParticipants;
+import wercsmik.spaghetticodingclub.domain.track.repository.TrackParticipantsRepository;
 import wercsmik.spaghetticodingclub.domain.user.dto.ProfileResponseDTO;
 import wercsmik.spaghetticodingclub.domain.user.dto.UpdateUserPasswordRequestDTO;
 import wercsmik.spaghetticodingclub.domain.user.entity.User;
@@ -18,12 +20,18 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TrackParticipantsRepository trackParticipantsRepository;
 
     public ProfileResponseDTO getProfile(Long userId) {
 
         User user = getUser(userId);
+        // 사용자가 참여하고 있는 트랙 조회
+        List<TrackParticipants> trackParticipants = trackParticipantsRepository.findByUserUserId(user.getUserId());
+        String trackName = trackParticipants.stream().findFirst()
+                .map(participant -> participant.getTrack().getTrackName())
+                .orElse("참여된 트랙 없음"); // 사용자가 어떤 트랙에도 참여하지 않았다면 기본값 설정
 
-        return new ProfileResponseDTO(user);
+        return new ProfileResponseDTO(user, trackName);
     }
 
     public User getUser(Long userId) {
