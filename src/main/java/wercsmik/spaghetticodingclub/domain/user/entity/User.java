@@ -39,15 +39,11 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
 
-    @Column
-    private String track;
-
     @Builder
-    private User(String username, String password, String email, String track, String recommendEmail, UserRoleEnum role) {
+    private User(String username, String password, String email, String recommendEmail, UserRoleEnum role) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.track = track;
         this.recommendEmail = recommendEmail;
         this.role = role;
     }

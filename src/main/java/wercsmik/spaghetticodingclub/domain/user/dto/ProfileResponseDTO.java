@@ -21,7 +21,7 @@ public class ProfileResponseDTO {
 
     private String recommendEmail;
 
-    public ProfileResponseDTO(User user) {
+    public ProfileResponseDTO(User user, String trackName) {
 
         this.userId = user.getUserId();
 
@@ -29,7 +29,7 @@ public class ProfileResponseDTO {
 
         this.email = user.getEmail();
 
-        this.track = user.getTrack();
+        this.track = trackName;
 
         this.role = user.getRole();
 
