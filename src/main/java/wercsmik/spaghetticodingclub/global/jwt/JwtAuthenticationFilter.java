@@ -5,6 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,6 +14,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import wercsmik.spaghetticodingclub.domain.auth.dto.LoginRequestDTO;
 import wercsmik.spaghetticodingclub.domain.auth.dto.LoginResponseDTO;
+import wercsmik.spaghetticodingclub.domain.track.entity.TrackParticipants;
+import wercsmik.spaghetticodingclub.domain.track.repository.TrackParticipantsRepository;
 import wercsmik.spaghetticodingclub.domain.user.entity.User;
 import wercsmik.spaghetticodingclub.domain.user.entity.UserRoleEnum;
 import wercsmik.spaghetticodingclub.global.common.CommonResponse;
@@ -22,13 +25,13 @@ import wercsmik.spaghetticodingclub.global.security.UserDetailsImpl;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private static final String CONTENT_TYPE = "application/json";
-
     private static final String CHARACTER_ENCODING = "UTF-8";
-
     private final JwtUtil jwtUtil;
-
-    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+    private final TrackParticipantsRepository trackParticipantsRepository;
+    public JwtAuthenticationFilter(JwtUtil jwtUtil,
+            TrackParticipantsRepository trackParticipantsRepository) {
         this.jwtUtil = jwtUtil;
+        this.trackParticipantsRepository = trackParticipantsRepository;
 
         setFilterProcessesUrl("/api/auths/login");
     }
@@ -73,7 +76,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         jwtUtil.addJwtToHeader(accessToken, response);
 
-        LoginResponseDTO loginResponseDTO = new LoginResponseDTO(user);
+        // 사용자가 참여하고 있는 트랙 조회
+        List<TrackParticipants> trackParticipants = trackParticipantsRepository.findByUserUserId(user.getUserId());
+        String trackName = trackParticipants.stream().findFirst()
+                .map(participant -> participant.getTrack().getTrackName())
+                .orElse("참여된 트랙 없음"); // 사용자가 어떤 트랙에도 참여하지 않았다면 기본값 설정
+
+        LoginResponseDTO loginResponseDTO = new LoginResponseDTO(user.getUserId(), user.getUsername(), user.getEmail(), trackName, user.getRole(), user.getRecommendEmail());
 
         // CommonResponse 객체 생성
         CommonResponse<LoginResponseDTO> commonResponse = CommonResponse.of("로그인 성공", loginResponseDTO);
