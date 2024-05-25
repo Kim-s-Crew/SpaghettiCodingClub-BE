@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import wercsmik.spaghetticodingclub.domain.track.repository.TrackParticipantsRepository;
 import wercsmik.spaghetticodingclub.global.jwt.JwtAuthenticationFilter;
 import wercsmik.spaghetticodingclub.global.jwt.JwtAuthorizationFilter;
 import wercsmik.spaghetticodingclub.global.jwt.JwtUtil;
@@ -29,6 +30,7 @@ public class WebSecurityConfig {
     private final UserDetailsServiceImpl userDetailsServiceImpl;
     private final ObjectMapper objectMapper;
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final TrackParticipantsRepository trackParticipantsRepository;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -48,7 +50,8 @@ public class WebSecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil,
+                trackParticipantsRepository);
         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
 
         return filter;
