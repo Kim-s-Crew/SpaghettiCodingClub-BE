@@ -71,6 +71,10 @@ public class TrackParticipantsService {
             throw new CustomException(ErrorCode.NO_AUTHENTICATION);
         }
 
+        if (newTrackName == null || newTrackName.trim().isEmpty()) {
+            throw new CustomException(ErrorCode.INVALID_TRACK_NAME);
+        }
+
         // 새 트랙의 존재 여부 확인
         Track newTrack = trackRepository.findByTrackName(newTrackName)
                 .orElseThrow(() -> new CustomException(ErrorCode.TRACK_NOT_FOUND));
