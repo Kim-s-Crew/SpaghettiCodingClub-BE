@@ -16,13 +16,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import wercsmik.spaghetticodingclub.domain.user.entity.User;
+import wercsmik.spaghetticodingclub.global.auditing.BaseTimeEntity;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class Assessment {
+public class Assessment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

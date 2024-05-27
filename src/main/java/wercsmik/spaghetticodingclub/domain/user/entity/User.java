@@ -18,13 +18,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import wercsmik.spaghetticodingclub.domain.assessment.entity.Assessment;
-import wercsmik.spaghetticodingclub.domain.auth.entity.EmailVerification;
+import wercsmik.spaghetticodingclub.global.auditing.BaseTimeEntity;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "users")
-public class User {
+public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

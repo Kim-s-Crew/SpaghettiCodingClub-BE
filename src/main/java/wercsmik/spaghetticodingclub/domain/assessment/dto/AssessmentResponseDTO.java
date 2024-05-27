@@ -23,7 +23,7 @@ public class AssessmentResponseDTO {
 
     private LocalDateTime modifiedAt;
 
-    public static AssessmentResponseDTO of(Assessment assessment) {
+    public static AssessmentResponseDTO of (Assessment assessment) {
         return new AssessmentResponseDTO(
                 assessment.getAssessmentId(),
                 assessment.getUserId().getUserId(),

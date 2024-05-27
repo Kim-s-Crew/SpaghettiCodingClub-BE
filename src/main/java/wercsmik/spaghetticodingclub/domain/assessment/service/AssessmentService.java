@@ -42,8 +42,6 @@ public class AssessmentService {
                 .adminId(admin)
                 .type(assessmentType)
                 .content(assessmentRequestDTO.getContent())
-                .createdAt(LocalDateTime.now()) // 현재 시간으로 설정
-                .modifiedAt(LocalDateTime.now()) // 현재 시간으로 설정
                 .build();
 
         Assessment savedAssessment = assessmentRepository.save(assessment);
@@ -62,6 +60,7 @@ public class AssessmentService {
     }
 
     public List<AssessmentResponseDTO> getAssessmentsByUserId(Long userId) {
+
         List<Assessment> assessments = assessmentRepository.findAllByUserId_UserId(userId);
 
         if (assessments == null || assessments.isEmpty()) {
