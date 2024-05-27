@@ -56,6 +56,20 @@ public class AssessmentService {
 
         List<Assessment> assessments = assessmentRepository.findAll();
 
-        return assessments.stream().map(AssessmentResponseDTO::of).collect(Collectors.toList());
+        return assessments.stream()
+                .map(AssessmentResponseDTO::of)
+                .collect(Collectors.toList());
+    }
+
+    public List<AssessmentResponseDTO> getAssessmentsByUserId(Long userId) {
+        List<Assessment> assessments = assessmentRepository.findAllByUserId_UserId(userId);
+
+        if (assessments == null || assessments.isEmpty()) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        return assessments.stream()
+                .map(AssessmentResponseDTO::of)
+                .collect(Collectors.toList());
     }
 }
