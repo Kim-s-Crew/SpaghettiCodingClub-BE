@@ -1,6 +1,8 @@
 package wercsmik.spaghetticodingclub.domain.assessment.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,5 +49,13 @@ public class AssessmentService {
         Assessment savedAssessment = assessmentRepository.save(assessment);
 
         return AssessmentResponseDTO.of(savedAssessment);
+    }
+
+    @Transactional
+    public List<AssessmentResponseDTO> getAllAssessment() {
+
+        List<Assessment> assessments = assessmentRepository.findAll();
+
+        return assessments.stream().map(AssessmentResponseDTO::of).collect(Collectors.toList());
     }
 }
