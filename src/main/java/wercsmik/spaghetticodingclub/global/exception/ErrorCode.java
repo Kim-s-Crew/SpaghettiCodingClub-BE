@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum ErrorCode {
 
     // Assessment
+    ASSESSMENT_TYPE_NOT_FOUND(400, "해당 평가 유형은 존재하지 않습니다."),
 
 
     // Auth
