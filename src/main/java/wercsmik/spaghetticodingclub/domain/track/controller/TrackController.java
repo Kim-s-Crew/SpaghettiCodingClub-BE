@@ -6,6 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import wercsmik.spaghetticodingclub.domain.track.dto.TrackRequestDTO;
 import wercsmik.spaghetticodingclub.domain.track.dto.TrackResponseDTO;
+import wercsmik.spaghetticodingclub.domain.track.dto.TrackUpdateResponseDTO;
 import wercsmik.spaghetticodingclub.domain.track.service.TrackService;
 import wercsmik.spaghetticodingclub.global.auditing.BaseTimeEntity;
 import wercsmik.spaghetticodingclub.global.common.CommonResponse;
@@ -36,4 +37,16 @@ public class TrackController extends BaseTimeEntity {
 
         return ResponseEntity.ok().body(CommonResponse.of("트랙 전체 조회 성공", tracks));
     }
+
+    @PutMapping("/{trackId}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<CommonResponse<TrackUpdateResponseDTO>> updateTrack(
+            @PathVariable Long trackId,
+            @RequestBody TrackRequestDTO trackRequest) {
+
+        TrackUpdateResponseDTO updatedTrack = trackService.updateTrackName(trackId, trackRequest.getTrackName());
+
+        return ResponseEntity.ok().body(CommonResponse.of("트랙명 수정 성공", updatedTrack));
+    }
+
 }
