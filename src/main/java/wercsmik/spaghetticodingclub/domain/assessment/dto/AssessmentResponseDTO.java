@@ -24,7 +24,7 @@ public class AssessmentResponseDTO {
     private LocalDateTime modifiedAt;
 
     public static AssessmentResponseDTO of (Assessment assessment) {
-        return new AssessmentResponseDTO(
+         return new AssessmentResponseDTO(
                 assessment.getAssessmentId(),
                 assessment.getUserId().getUserId(),
                 assessment.getAdminId().getUserId(),
@@ -32,6 +32,6 @@ public class AssessmentResponseDTO {
                 assessment.getContent(),
                 assessment.getCreatedAt(),
                 assessment.getModifiedAt()
-        );
+         );
     }
 }
