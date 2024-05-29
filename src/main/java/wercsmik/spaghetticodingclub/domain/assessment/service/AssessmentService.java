@@ -1,6 +1,7 @@
 package wercsmik.spaghetticodingclub.domain.assessment.service;
 
-import java.time.LocalDateTime;
+import static com.amazonaws.util.StringUtils.isNullOrEmpty;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,13 @@ public class AssessmentService {
         // 평가받는 사용자를 조회하는 로직
         User user = userRepository.findById(assessmentRequestDTO.getUserId())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        // background, guidance, relationship 필드의 값을 검사하는 로직
+        if (isNullOrEmpty(assessmentRequestDTO.getBackground()) &&
+                isNullOrEmpty(assessmentRequestDTO.getGuidance()) &&
+                isNullOrEmpty(assessmentRequestDTO.getRelationship())) {
+            throw new CustomException(ErrorCode.INVALID_ASSESSMENT_DATA); // Custom exception for invalid data
+        }
 
         Assessment assessment = Assessment.builder()
                 .userId(user) // 평가받는 사용자 설정
