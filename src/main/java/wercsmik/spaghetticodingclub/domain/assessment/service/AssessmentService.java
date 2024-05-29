@@ -56,6 +56,10 @@ public class AssessmentService {
 
         List<Assessment> assessments = assessmentRepository.findAll();
 
+        if (assessments.isEmpty()) {
+            throw new CustomException(ErrorCode.ASSESSMENT_NOT_FOUND);
+        }
+
         return assessments.stream()
                 .map(AssessmentResponseDTO::of)
                 .collect(Collectors.toList());
@@ -95,6 +99,14 @@ public class AssessmentService {
         Assessment updatedAssessment = assessmentRepository.save(assessment);
 
         return AssessmentResponseDTO.of(updatedAssessment);
+    }
+
+    @Transactional
+    public void deleteAssessment(Long assessmentId) {
+        Assessment assessment = assessmentRepository.findById(assessmentId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ASSESSMENT_NOT_FOUND));
+
+        assessmentRepository.delete(assessment);
     }
 
     private boolean isNullOrEmpty(String str) {
