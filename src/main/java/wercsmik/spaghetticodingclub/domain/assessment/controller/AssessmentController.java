@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -68,5 +69,15 @@ public class AssessmentController{
         AssessmentResponseDTO updatedAssessment = assessmentService.updateAssessment(assessmentId, updateAssessmentRequestDTO);
 
         return ResponseEntity.ok().body(CommonResponse.of("평가 수정 성공", updatedAssessment));
+    }
+
+    @DeleteMapping("/{assessmentId}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<CommonResponse<AssessmentResponseDTO>> deleteAssessment(
+            @PathVariable Long assessmentId) {
+
+        assessmentService.deleteAssessment(assessmentId);
+
+        return ResponseEntity.ok().body(CommonResponse.of("평가 삭제 성공", null));
     }
 }
