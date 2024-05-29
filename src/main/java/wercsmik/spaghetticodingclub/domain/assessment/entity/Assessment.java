@@ -37,16 +37,12 @@ public class Assessment extends BaseTimeEntity {
     @JoinColumn(name = "adminId")
     private User adminId; // 평가를 한 관리자
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private AssessmentType type;
+    @Column
+    private String background;
 
-    @Column(nullable = false)
-    private String content;
+    @Column
+    private String guidance;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(nullable = false)
-    private LocalDateTime modifiedAt;
+    @Column
+    private String relationship;
 }

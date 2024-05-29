@@ -1,5 +1,6 @@
 package wercsmik.spaghetticodingclub.domain.assessment.dto;
 
+import jakarta.persistence.Column;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,9 +16,14 @@ public class AssessmentResponseDTO {
 
     private Long adminId; // 평가를 한 관리자 ID
 
-    private String type;
+    @Column
+    private String background;
 
-    private String content;
+    @Column
+    private String guidance;
+
+    @Column
+    private String relationship;
 
     private LocalDateTime createdAt;
 
@@ -28,8 +34,9 @@ public class AssessmentResponseDTO {
                 assessment.getAssessmentId(),
                 assessment.getUserId().getUserId(),
                 assessment.getAdminId().getUserId(),
-                assessment.getType().toString(),
-                assessment.getContent(),
+                assessment.getBackground(),
+                assessment.getGuidance(),
+                assessment.getRelationship(),
                 assessment.getCreatedAt(),
                 assessment.getModifiedAt()
          );

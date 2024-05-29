@@ -13,7 +13,9 @@ public class AssessmentRequestDTO {
 
     private Long userId;
 
-    private String type;
+    private String background;
 
-    private String content;
+    private String guidance;
+
+    private String relationship;
 }
