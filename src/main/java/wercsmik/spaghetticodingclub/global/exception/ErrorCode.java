@@ -39,8 +39,11 @@ public enum ErrorCode {
 
     INVALID_TRACK_NAME(400, "잘못된 트랙 이름입니다."),
 
+
     // Track Notice
     INVALID_NOTICE_CONTENT(400, "공지 내용이 누락되었습니다."),
+
+    TRACK_NOTICE_NOT_FOUND(400, "해당 트랙 공지사항을 찾을 수 없습니다."),
 
 
     // Unlike

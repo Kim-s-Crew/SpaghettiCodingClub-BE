@@ -56,4 +56,15 @@ public class TrackNoticeController {
         return ResponseEntity.ok().
                 body(CommonResponse.of("트랙 공지 전체 조회 성공", notices));
     }
+
+    @DeleteMapping("/{noticeId}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<CommonResponse<Void>> deleteTrackNotice(
+            @PathVariable Long trackId,
+            @PathVariable Long noticeId) {
+
+        trackNoticeService.deleteTrackNotice(noticeId, trackId);
+
+        return ResponseEntity.ok().body(CommonResponse.of("트랙 공지 삭제 성공", null));
+    }
 }
