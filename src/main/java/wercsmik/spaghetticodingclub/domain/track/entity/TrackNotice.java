@@ -26,7 +26,7 @@ public class TrackNotice extends BaseTimeEntity {
     private String trackNoticeContent;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trackId", nullable = false)
+    @JoinColumn(name = "trackId", referencedColumnName = "trackId", nullable = false)
     private Track track;
 
     @ManyToOne(fetch = FetchType.LAZY)
