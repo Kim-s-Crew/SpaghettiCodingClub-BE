@@ -75,6 +75,22 @@ public class TrackNoticeService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public void deleteTrackNotice(Long noticeId, Long trackId) {
+
+        Track track = trackRepository.findById(trackId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRACK_NOT_FOUND));
+
+        TrackNotice notice = trackNoticeRepository.findById(noticeId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRACK_NOTICE_NOT_FOUND));
+
+        if (!isAdmin()) {
+            throw new CustomException(ErrorCode.NO_AUTHENTICATION);
+        }
+
+        trackNoticeRepository.delete(notice);
+    }
+
 
     /*
         공통 로직을 메서드로 분리
