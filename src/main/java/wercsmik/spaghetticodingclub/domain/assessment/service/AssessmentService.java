@@ -1,6 +1,7 @@
 package wercsmik.spaghetticodingclub.domain.assessment.service;
 
-import java.time.LocalDateTime;
+import static com.amazonaws.util.StringUtils.isNullOrEmpty;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import wercsmik.spaghetticodingclub.domain.assessment.dto.AssessmentRequestDTO;
 import wercsmik.spaghetticodingclub.domain.assessment.dto.AssessmentResponseDTO;
 import wercsmik.spaghetticodingclub.domain.assessment.entity.Assessment;
-import wercsmik.spaghetticodingclub.domain.assessment.entity.AssessmentType;
 import wercsmik.spaghetticodingclub.domain.assessment.repository.AssessmentRepository;
 import wercsmik.spaghetticodingclub.domain.user.entity.User;
 import wercsmik.spaghetticodingclub.domain.user.repository.UserRepository;
@@ -26,22 +26,23 @@ public class AssessmentService {
     @Transactional
     public AssessmentResponseDTO createAssessment(User admin, AssessmentRequestDTO assessmentRequestDTO) {
 
-        AssessmentType assessmentType;
-        try {
-            assessmentType = AssessmentType.valueOf(assessmentRequestDTO.getType());
-        } catch (IllegalArgumentException e) {
-            throw new CustomException(ErrorCode.ASSESSMENT_TYPE_NOT_FOUND);
-        }
-
         // 평가받는 사용자를 조회하는 로직
         User user = userRepository.findById(assessmentRequestDTO.getUserId())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
+        // background, guidance, relationship 필드의 값을 검사하는 로직
+        if (isNullOrEmpty(assessmentRequestDTO.getBackground()) &&
+                isNullOrEmpty(assessmentRequestDTO.getGuidance()) &&
+                isNullOrEmpty(assessmentRequestDTO.getRelationship())) {
+            throw new CustomException(ErrorCode.INVALID_ASSESSMENT_DATA);
+        }
+
         Assessment assessment = Assessment.builder()
                 .userId(user) // 평가받는 사용자 설정
                 .adminId(admin)
-                .type(assessmentType)
-                .content(assessmentRequestDTO.getContent())
+                .background(assessmentRequestDTO.getBackground())
+                .guidance(assessmentRequestDTO.getGuidance())
+                .relationship(assessmentRequestDTO.getRelationship())
                 .build();
 
         Assessment savedAssessment = assessmentRepository.save(assessment);

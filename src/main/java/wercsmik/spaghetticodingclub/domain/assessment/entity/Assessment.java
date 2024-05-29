@@ -2,15 +2,12 @@ package wercsmik.spaghetticodingclub.domain.assessment.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,16 +34,12 @@ public class Assessment extends BaseTimeEntity {
     @JoinColumn(name = "adminId")
     private User adminId; // 평가를 한 관리자
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private AssessmentType type;
+    @Column
+    private String background;
 
-    @Column(nullable = false)
-    private String content;
+    @Column
+    private String guidance;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(nullable = false)
-    private LocalDateTime modifiedAt;
+    @Column
+    private String relationship;
 }
