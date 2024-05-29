@@ -34,7 +34,7 @@ public class AssessmentService {
         if (isNullOrEmpty(assessmentRequestDTO.getBackground()) &&
                 isNullOrEmpty(assessmentRequestDTO.getGuidance()) &&
                 isNullOrEmpty(assessmentRequestDTO.getRelationship())) {
-            throw new CustomException(ErrorCode.INVALID_ASSESSMENT_DATA); // Custom exception for invalid data
+            throw new CustomException(ErrorCode.INVALID_ASSESSMENT_DATA);
         }
 
         Assessment assessment = Assessment.builder()
