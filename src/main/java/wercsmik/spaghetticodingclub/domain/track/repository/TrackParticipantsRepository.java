@@ -11,4 +11,6 @@ public interface TrackParticipantsRepository extends JpaRepository<TrackParticip
     List<TrackParticipants> findByTrackTrackId(Long trackId);
 
     List<TrackParticipants> findByUserUserId(Long userId);
+
+    boolean existsById_UserIdAndId_TrackId(Long userId, Long trackId);
 }

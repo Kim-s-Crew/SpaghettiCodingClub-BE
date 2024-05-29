@@ -5,22 +5,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import wercsmik.spaghetticodingclub.domain.track.dto.TrackNoticeCreationRequestDTO;
 import wercsmik.spaghetticodingclub.domain.track.dto.TrackNoticeResponseDTO;
 import wercsmik.spaghetticodingclub.domain.track.service.TrackNoticeService;
 import wercsmik.spaghetticodingclub.global.common.CommonResponse;
+import wercsmik.spaghetticodingclub.global.security.UserDetailsImpl;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/tracks/{trackId}/notices")
-@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 public class TrackNoticeController {
 
     private final TrackNoticeService trackNoticeService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<CommonResponse<TrackNoticeResponseDTO>> createTrackNotice(
             @PathVariable Long trackId,
             @RequestBody TrackNoticeCreationRequestDTO requestDTO) {
@@ -32,5 +36,24 @@ public class TrackNoticeController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(CommonResponse.of("트랙 공지 생성 성공", createdNotice));
+    }
+
+    @GetMapping
+    public ResponseEntity<CommonResponse<List<TrackNoticeResponseDTO>>> getNotices(
+            @PathVariable Long trackId) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        Long userId = ((UserDetailsImpl) auth.getPrincipal()).getUser().getUserId();
+
+        List<TrackNoticeResponseDTO> notices;
+        if (isAdmin) {
+            notices = trackNoticeService.getNoticesForTrack(trackId);  // 관리자는 모든 공지 조회
+        } else {
+            notices = trackNoticeService.getNoticesForUserByTrack(userId, trackId);  // 사용자는 해당 트랙의 공지만 조회
+        }
+
+        return ResponseEntity.ok().
+                body(CommonResponse.of("트랙 공지 전체 조회 성공", notices));
     }
 }
