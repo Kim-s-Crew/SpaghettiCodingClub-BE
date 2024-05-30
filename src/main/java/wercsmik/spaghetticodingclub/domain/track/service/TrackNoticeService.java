@@ -85,7 +85,6 @@ public class TrackNoticeService {
         TrackNotice notice = trackNoticeRepository.findById(noticeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TRACK_NOTICE_NOT_FOUND));
 
-
         if (isAdmin() || isUserNoticeAccessible(userId, notice.getTrack().getTrackId())) {
             return new TrackNoticeResponseDTO(notice);
         } else {
