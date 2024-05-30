@@ -75,6 +75,9 @@ public class AssessmentService {
 
     public List<AssessmentResponseDTO> getAssessmentsByUserId(Long userId) {
 
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
         if (isAdmin()) {
             throw new CustomException(ErrorCode.NO_AUTHENTICATION);
         }
@@ -82,7 +85,7 @@ public class AssessmentService {
         List<Assessment> assessments = assessmentRepository.findAllByUserId_UserId(userId);
 
         if (assessments == null || assessments.isEmpty()) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+            throw new CustomException(ErrorCode.ASSESSMENT_NOT_FOUND);
         }
 
         return assessments.stream()
