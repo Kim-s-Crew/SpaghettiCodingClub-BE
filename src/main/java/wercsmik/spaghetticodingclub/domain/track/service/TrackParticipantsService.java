@@ -64,19 +64,15 @@ public class TrackParticipantsService {
     }
 
     @Transactional
-    public TrackParticipantUpdateResponseDTO updateParticipantTrack(Long userId, Long oldTrackId, String newTrackName) {
+    public TrackParticipantUpdateResponseDTO updateParticipantTrack(Long userId, Long oldTrackId, Long newTrackId) {
         // 관리자 권한 확인
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
             throw new CustomException(ErrorCode.NO_AUTHENTICATION);
         }
 
-        if (newTrackName == null || newTrackName.trim().isEmpty()) {
-            throw new CustomException(ErrorCode.INVALID_TRACK_NAME);
-        }
-
         // 새 트랙의 존재 여부 확인
-        Track newTrack = trackRepository.findByTrackName(newTrackName)
+        Track newTrack = trackRepository.findById(newTrackId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TRACK_NOT_FOUND));
 
         // 트랙 참여자 정보 조회
@@ -84,9 +80,17 @@ public class TrackParticipantsService {
         TrackParticipants participant = trackParticipantsRepository.findById(participantId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        // 트랙 정보 업데이트
-        participant.updateTrack(newTrack);
-        trackParticipantsRepository.save(participant);
+        // 기존 트랙 참여자 정보 삭제
+        trackParticipantsRepository.delete(participant);
+
+        // 새로운 트랙 참여자 정보 생성
+        TrackParticipants newParticipant = TrackParticipants.builder()
+                .user(participant.getUser())
+                .track(newTrack)
+                .joinedAt(LocalDateTime.now())
+                .build();
+
+        trackParticipantsRepository.save(newParticipant);
 
         return TrackParticipantUpdateResponseDTO.builder()
                 .userId(userId)
