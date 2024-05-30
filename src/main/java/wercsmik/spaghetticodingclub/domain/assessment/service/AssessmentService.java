@@ -1,10 +1,10 @@
 package wercsmik.spaghetticodingclub.domain.assessment.service;
 
-import static com.amazonaws.util.StringUtils.isNullOrEmpty;
-
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wercsmik.spaghetticodingclub.domain.assessment.dto.AssessmentRequestDTO;
@@ -26,6 +26,10 @@ public class AssessmentService {
 
     @Transactional
     public AssessmentResponseDTO createAssessment(User admin, AssessmentRequestDTO assessmentRequestDTO) {
+
+        if (isAdmin()) {
+            throw new CustomException(ErrorCode.NO_AUTHENTICATION);
+        }
 
         // 평가받는 사용자를 조회하는 로직
         User user = userRepository.findById(assessmentRequestDTO.getUserId())
@@ -54,7 +58,15 @@ public class AssessmentService {
     @Transactional
     public List<AssessmentResponseDTO> getAllAssessment() {
 
+        if (isAdmin()) {
+            throw new CustomException(ErrorCode.NO_AUTHENTICATION);
+        }
+
         List<Assessment> assessments = assessmentRepository.findAll();
+
+        if (assessments.isEmpty()) {
+            throw new CustomException(ErrorCode.ASSESSMENT_NOT_FOUND);
+        }
 
         return assessments.stream()
                 .map(AssessmentResponseDTO::of)
@@ -63,10 +75,17 @@ public class AssessmentService {
 
     public List<AssessmentResponseDTO> getAssessmentsByUserId(Long userId) {
 
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        if (isAdmin()) {
+            throw new CustomException(ErrorCode.NO_AUTHENTICATION);
+        }
+
         List<Assessment> assessments = assessmentRepository.findAllByUserId_UserId(userId);
 
         if (assessments == null || assessments.isEmpty()) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+            throw new CustomException(ErrorCode.ASSESSMENT_NOT_FOUND);
         }
 
         return assessments.stream()
@@ -76,6 +95,10 @@ public class AssessmentService {
 
     @Transactional
     public AssessmentResponseDTO updateAssessment(Long assessmentId, UpdateAssessmentRequestDTO updateAssessmentRequestDTO) {
+
+        if (isAdmin()) {
+            throw new CustomException(ErrorCode.NO_AUTHENTICATION);
+        }
 
         // 평가를 조회하는 로직
         Assessment assessment = assessmentRepository.findById(assessmentId)
@@ -97,7 +120,26 @@ public class AssessmentService {
         return AssessmentResponseDTO.of(updatedAssessment);
     }
 
+    @Transactional
+    public void deleteAssessment(Long assessmentId) {
+
+        if (isAdmin()) {
+            throw new CustomException(ErrorCode.NO_AUTHENTICATION);
+        }
+
+        Assessment assessment = assessmentRepository.findById(assessmentId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ASSESSMENT_NOT_FOUND));
+
+        assessmentRepository.delete(assessment);
+    }
+
     private boolean isNullOrEmpty(String str) {
         return str == null || str.trim().isEmpty();
+    }
+
+    private boolean isAdmin() {
+
+        return !SecurityContextHolder.getContext().getAuthentication()
+                .getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
     }
 }
