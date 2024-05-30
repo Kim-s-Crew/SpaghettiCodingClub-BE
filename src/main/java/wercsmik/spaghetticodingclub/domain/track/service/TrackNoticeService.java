@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wercsmik.spaghetticodingclub.domain.track.dto.TrackNoticeCreationRequestDTO;
 import wercsmik.spaghetticodingclub.domain.track.dto.TrackNoticeResponseDTO;
+import wercsmik.spaghetticodingclub.domain.track.dto.TrackNoticeUpdateRequestDTO;
 import wercsmik.spaghetticodingclub.domain.track.entity.Track;
 import wercsmik.spaghetticodingclub.domain.track.entity.TrackNotice;
 import wercsmik.spaghetticodingclub.domain.track.repository.TrackNoticeRepository;
@@ -74,6 +75,28 @@ public class TrackNoticeService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public TrackNoticeResponseDTO updateTrackNotice(Long trackId, Long noticeId, TrackNoticeUpdateRequestDTO requestDTO) {
+
+        if (!isAdmin()) {
+            throw new CustomException(ErrorCode.NO_AUTHENTICATION);
+        }
+
+        Track track = trackRepository.findById(trackId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRACK_NOT_FOUND));
+
+        TrackNotice notice = trackNoticeRepository.findById(noticeId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRACK_NOTICE_NOT_FOUND));
+
+        notice.setTrackNoticeTitle(requestDTO.getTrackNoticeTitle());
+        notice.setTrackNoticeContent(requestDTO.getTrackNoticeContent());
+
+        TrackNotice updatedNotice = trackNoticeRepository.save(notice);
+
+        return new TrackNoticeResponseDTO(updatedNotice);
+    }
+
 
     @Transactional
     public void deleteTrackNotice(Long noticeId, Long trackId) {
