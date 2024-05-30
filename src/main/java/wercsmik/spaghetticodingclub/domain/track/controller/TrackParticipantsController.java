@@ -37,8 +37,8 @@ public class TrackParticipantsController {
             @RequestBody TrackUpdateRequestDTO trackUpdateRequest) {
 
         TrackParticipantUpdateResponseDTO updatedInfo = trackParticipantsService.updateParticipantTrack(
-                userId, oldTrackId, trackUpdateRequest.getNewTrackName());
+                userId, oldTrackId, trackUpdateRequest.getNewTrackId());
 
-        return ResponseEntity.ok().body(CommonResponse.of("트랙 참가자의 트랙 수정 성공", updatedInfo));
+        return ResponseEntity.ok().body(CommonResponse.of("트랙 참여자의 트랙 수정 성공", updatedInfo));
     }
 }
