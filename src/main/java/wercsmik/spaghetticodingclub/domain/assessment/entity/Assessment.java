@@ -42,4 +42,16 @@ public class Assessment extends BaseTimeEntity {
 
     @Column
     private String relationship;
+
+    public void setBackground(String background) {
+        this.background = background;
+    }
+
+    public void setGuidance(String guidance) {
+        this.guidance = guidance;
+    }
+
+    public void setRelationship(String relationship) {
+        this.relationship = relationship;
+    }
 }

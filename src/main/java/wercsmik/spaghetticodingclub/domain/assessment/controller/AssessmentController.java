@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wercsmik.spaghetticodingclub.domain.assessment.dto.AssessmentRequestDTO;
 import wercsmik.spaghetticodingclub.domain.assessment.dto.AssessmentResponseDTO;
+import wercsmik.spaghetticodingclub.domain.assessment.dto.UpdateAssessmentRequestDTO;
 import wercsmik.spaghetticodingclub.domain.assessment.service.AssessmentService;
 import wercsmik.spaghetticodingclub.global.common.CommonResponse;
 import wercsmik.spaghetticodingclub.global.security.UserDetailsImpl;
@@ -57,4 +59,14 @@ public class AssessmentController{
         return ResponseEntity.ok().body(CommonResponse.of("특정 사용자 평가 조회 성공", assessments));
     }
 
+    @PatchMapping("/{assessmentId}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<CommonResponse<AssessmentResponseDTO>> updateAssessment(
+            @PathVariable Long assessmentId,
+            @RequestBody UpdateAssessmentRequestDTO updateAssessmentRequestDTO) {
+
+        AssessmentResponseDTO updatedAssessment = assessmentService.updateAssessment(assessmentId, updateAssessmentRequestDTO);
+
+        return ResponseEntity.ok().body(CommonResponse.of("평가 수정 성공", updatedAssessment));
+    }
 }

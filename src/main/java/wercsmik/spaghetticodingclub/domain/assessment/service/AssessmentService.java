@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wercsmik.spaghetticodingclub.domain.assessment.dto.AssessmentRequestDTO;
 import wercsmik.spaghetticodingclub.domain.assessment.dto.AssessmentResponseDTO;
+import wercsmik.spaghetticodingclub.domain.assessment.dto.UpdateAssessmentRequestDTO;
 import wercsmik.spaghetticodingclub.domain.assessment.entity.Assessment;
 import wercsmik.spaghetticodingclub.domain.assessment.repository.AssessmentRepository;
 import wercsmik.spaghetticodingclub.domain.user.entity.User;
@@ -71,5 +72,32 @@ public class AssessmentService {
         return assessments.stream()
                 .map(AssessmentResponseDTO::of)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public AssessmentResponseDTO updateAssessment(Long assessmentId, UpdateAssessmentRequestDTO updateAssessmentRequestDTO) {
+
+        // 평가를 조회하는 로직
+        Assessment assessment = assessmentRepository.findById(assessmentId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ASSESSMENT_NOT_FOUND));
+
+        // background, guidance, relationship 필드의 값이 null, Empty 이외 일때만 수정
+        if (!isNullOrEmpty(updateAssessmentRequestDTO.getBackground())) {
+            assessment.setBackground(updateAssessmentRequestDTO.getBackground());
+        }
+        if (!isNullOrEmpty(updateAssessmentRequestDTO.getGuidance())) {
+            assessment.setGuidance(updateAssessmentRequestDTO.getGuidance());
+        }
+        if (!isNullOrEmpty(updateAssessmentRequestDTO.getRelationship())) {
+            assessment.setRelationship(updateAssessmentRequestDTO.getRelationship());
+        }
+
+        Assessment updatedAssessment = assessmentRepository.save(assessment);
+
+        return AssessmentResponseDTO.of(updatedAssessment);
+    }
+
+    private boolean isNullOrEmpty(String str) {
+        return str == null || str.trim().isEmpty();
     }
 }
