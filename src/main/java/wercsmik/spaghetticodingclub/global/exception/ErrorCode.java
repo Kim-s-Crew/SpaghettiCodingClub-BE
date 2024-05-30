@@ -8,7 +8,7 @@ public enum ErrorCode {
     // Assessment
     ASSESSMENT_NOT_FOUND(404, "평가 정보가 존재하지 않습니다."),
 
-    INVALID_ASSESSMENT_DATA(400,"평가 데이터가 유효하지 않습니다."),
+    INVALID_ASSESSMENT_DATA(400, "평가 데이터가 유효하지 않습니다."),
 
 
     // Auth
@@ -50,6 +50,10 @@ public enum ErrorCode {
 
     // Track Week
     TRACK_WEEK_OVERLAP(400, "주차 기간이 겹칩니다."),
+
+    INVALID_DATE_RANGE(400, "종료일은 시작일보다 이전일 수 없습니다."),
+
+    START_DATE_BEFORE_CURRENT(400, "시작일은 현재 날짜보다 이전일 수 없습니다."),
 
 
     // Unlike

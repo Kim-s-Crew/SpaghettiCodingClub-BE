@@ -27,6 +27,8 @@ public class TrackWeekService {
     @Transactional
     public TrackWeekCreationResponseDTO createTrackWeek(Long trackId, TrackWeekCreationRequestDTO requestDTO) {
 
+        validateDateRange(requestDTO.getStartDate(), requestDTO.getEndDate());
+
         if (!isAdmin()) {
             throw new CustomException(ErrorCode.NO_AUTHENTICATION);
         }
@@ -76,5 +78,15 @@ public class TrackWeekService {
 
         return SecurityContextHolder.getContext().getAuthentication()
                 .getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
+    }
+
+    private void validateDateRange(LocalDate startDate, LocalDate endDate) {
+
+        if (startDate.isBefore(LocalDate.now())) {
+            throw new CustomException(ErrorCode.START_DATE_BEFORE_CURRENT);
+        }
+        if (endDate.isBefore(startDate)) {
+            throw new CustomException(ErrorCode.INVALID_DATE_RANGE);
+        }
     }
 }
