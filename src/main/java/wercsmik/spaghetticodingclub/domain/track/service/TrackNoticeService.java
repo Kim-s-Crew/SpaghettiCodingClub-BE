@@ -76,6 +76,22 @@ public class TrackNoticeService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public TrackNoticeResponseDTO getTrackNotice(Long trackId, Long userId, Long noticeId) {
+
+        Track track = trackRepository.findById(trackId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRACK_NOT_FOUND));
+
+        TrackNotice notice = trackNoticeRepository.findById(noticeId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRACK_NOTICE_NOT_FOUND));
+
+        if (isAdmin() || isUserNoticeAccessible(userId, notice.getTrack().getTrackId())) {
+            return new TrackNoticeResponseDTO(notice);
+        } else {
+            throw new CustomException(ErrorCode.NO_AUTHENTICATION);
+        }
+    }
+
     @Transactional
     public TrackNoticeResponseDTO updateTrackNotice(Long trackId, Long noticeId, TrackNoticeUpdateRequestDTO requestDTO) {
 
@@ -147,6 +163,11 @@ public class TrackNoticeService {
     private TrackNoticeResponseDTO convertToDTO(TrackNotice trackNotice) {
 
         return new TrackNoticeResponseDTO(trackNotice);
+    }
+
+    private boolean isUserNoticeAccessible(Long userId, Long trackId) {
+
+        return trackParticipantRepository.existsById_UserIdAndId_TrackId(userId, trackId);
     }
 }
 

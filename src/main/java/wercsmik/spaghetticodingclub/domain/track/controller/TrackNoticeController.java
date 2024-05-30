@@ -39,6 +39,19 @@ public class TrackNoticeController {
                 .body(CommonResponse.of("트랙 공지 생성 성공", createdNotice));
     }
 
+    @GetMapping("/{noticeId}")
+    public ResponseEntity<CommonResponse<TrackNoticeResponseDTO>> getTrackNotice(
+            @PathVariable Long trackId,
+            @PathVariable Long noticeId) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = ((UserDetailsImpl) authentication.getPrincipal()).getUser().getUserId();
+
+        TrackNoticeResponseDTO notice = trackNoticeService.getTrackNotice(trackId, userId, noticeId);
+
+        return ResponseEntity.ok().body(CommonResponse.of("트랙 공지 조회 성공", notice));
+    }
+
     @GetMapping
     public ResponseEntity<CommonResponse<List<TrackNoticeResponseDTO>>> getNotices(
             @PathVariable Long trackId) {
