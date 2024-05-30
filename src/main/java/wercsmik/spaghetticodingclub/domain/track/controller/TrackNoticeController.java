@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import wercsmik.spaghetticodingclub.domain.track.dto.TrackNoticeCreationRequestDTO;
 import wercsmik.spaghetticodingclub.domain.track.dto.TrackNoticeResponseDTO;
+import wercsmik.spaghetticodingclub.domain.track.dto.TrackNoticeUpdateRequestDTO;
 import wercsmik.spaghetticodingclub.domain.track.service.TrackNoticeService;
 import wercsmik.spaghetticodingclub.global.common.CommonResponse;
 import wercsmik.spaghetticodingclub.global.security.UserDetailsImpl;
@@ -38,6 +39,19 @@ public class TrackNoticeController {
                 .body(CommonResponse.of("트랙 공지 생성 성공", createdNotice));
     }
 
+    @GetMapping("/{noticeId}")
+    public ResponseEntity<CommonResponse<TrackNoticeResponseDTO>> getTrackNotice(
+            @PathVariable Long trackId,
+            @PathVariable Long noticeId) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = ((UserDetailsImpl) authentication.getPrincipal()).getUser().getUserId();
+
+        TrackNoticeResponseDTO notice = trackNoticeService.getTrackNotice(trackId, userId, noticeId);
+
+        return ResponseEntity.ok().body(CommonResponse.of("트랙 공지 조회 성공", notice));
+    }
+
     @GetMapping
     public ResponseEntity<CommonResponse<List<TrackNoticeResponseDTO>>> getNotices(
             @PathVariable Long trackId) {
@@ -55,5 +69,29 @@ public class TrackNoticeController {
 
         return ResponseEntity.ok().
                 body(CommonResponse.of("트랙 공지 전체 조회 성공", notices));
+    }
+
+    @PutMapping("/{noticeId}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<CommonResponse<TrackNoticeResponseDTO>> updateTrackNotice(
+            @PathVariable Long trackId,
+            @PathVariable Long noticeId,
+            @RequestBody TrackNoticeUpdateRequestDTO requestDTO) {
+
+        TrackNoticeResponseDTO updatedNotice = trackNoticeService.updateTrackNotice(trackId, noticeId, requestDTO);
+
+        return ResponseEntity.ok().body(CommonResponse.of("트랙 공지 수정 성공", updatedNotice));
+    }
+
+
+    @DeleteMapping("/{noticeId}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<CommonResponse<Void>> deleteTrackNotice(
+            @PathVariable Long trackId,
+            @PathVariable Long noticeId) {
+
+        trackNoticeService.deleteTrackNotice(noticeId, trackId);
+
+        return ResponseEntity.ok().body(CommonResponse.of("트랙 공지 삭제 성공", null));
     }
 }
