@@ -119,6 +119,11 @@ public class AssessmentService {
 
     @Transactional
     public void deleteAssessment(Long assessmentId) {
+
+        if (isAdmin()) {
+            throw new CustomException(ErrorCode.NO_AUTHENTICATION);
+        }
+
         Assessment assessment = assessmentRepository.findById(assessmentId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ASSESSMENT_NOT_FOUND));
 
