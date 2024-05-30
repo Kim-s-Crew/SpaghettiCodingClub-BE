@@ -32,4 +32,12 @@ public class TrackNotice extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = false)
     private User user;
+
+    public void setTrackNoticeTitle(String trackNoticeTitle) {
+        this.trackNoticeTitle = trackNoticeTitle;
+    }
+
+    public void setTrackNoticeContent(String trackNoticeContent) {
+        this.trackNoticeContent = trackNoticeContent;
+    }
 }
