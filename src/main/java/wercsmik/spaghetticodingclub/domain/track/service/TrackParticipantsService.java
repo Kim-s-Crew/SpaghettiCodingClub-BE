@@ -84,9 +84,17 @@ public class TrackParticipantsService {
         TrackParticipants participant = trackParticipantsRepository.findById(participantId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        // 트랙 정보 업데이트
-        participant.updateTrack(newTrack);
-        trackParticipantsRepository.save(participant);
+        // 기존 트랙 참여자 정보 삭제
+        trackParticipantsRepository.delete(participant);
+
+        // 새로운 트랙 참여자 정보 생성
+        TrackParticipants newParticipant = TrackParticipants.builder()
+                .user(participant.getUser())
+                .track(newTrack)
+                .joinedAt(LocalDateTime.now())
+                .build();
+
+        trackParticipantsRepository.save(newParticipant);
 
         return TrackParticipantUpdateResponseDTO.builder()
                 .userId(userId)
