@@ -23,13 +23,13 @@ import wercsmik.spaghetticodingclub.global.security.UserDetailsImpl;
 
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 @RequestMapping("/api/assessmentItems")
 public class AssessmentController{
 
     private final AssessmentService assessmentService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<CommonResponse<AssessmentResponseDTO>> createAssessment(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestBody AssessmentRequestDTO assessmentRequestDTO) {
@@ -42,7 +42,6 @@ public class AssessmentController{
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<CommonResponse<List<AssessmentResponseDTO>>> getAllAssessment() {
 
         List<AssessmentResponseDTO> assessments = assessmentService.getAllAssessment();
@@ -51,7 +50,6 @@ public class AssessmentController{
     }
 
     @GetMapping("/{userId}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<CommonResponse<List<AssessmentResponseDTO>>> getUserAssessment(
             @PathVariable Long userId) {
 
@@ -61,7 +59,6 @@ public class AssessmentController{
     }
 
     @PatchMapping("/{assessmentId}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<CommonResponse<AssessmentResponseDTO>> updateAssessment(
             @PathVariable Long assessmentId,
             @RequestBody UpdateAssessmentRequestDTO updateAssessmentRequestDTO) {
@@ -72,7 +69,6 @@ public class AssessmentController{
     }
 
     @DeleteMapping("/{assessmentId}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<CommonResponse<AssessmentResponseDTO>> deleteAssessment(
             @PathVariable Long assessmentId) {
 
