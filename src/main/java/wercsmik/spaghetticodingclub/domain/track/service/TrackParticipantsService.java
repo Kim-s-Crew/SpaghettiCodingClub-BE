@@ -64,19 +64,15 @@ public class TrackParticipantsService {
     }
 
     @Transactional
-    public TrackParticipantUpdateResponseDTO updateParticipantTrack(Long userId, Long oldTrackId, String newTrackName) {
+    public TrackParticipantUpdateResponseDTO updateParticipantTrack(Long userId, Long oldTrackId, Long newTrackId) {
         // 관리자 권한 확인
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
             throw new CustomException(ErrorCode.NO_AUTHENTICATION);
         }
 
-        if (newTrackName == null || newTrackName.trim().isEmpty()) {
-            throw new CustomException(ErrorCode.INVALID_TRACK_NAME);
-        }
-
         // 새 트랙의 존재 여부 확인
-        Track newTrack = trackRepository.findByTrackName(newTrackName)
+        Track newTrack = trackRepository.findById(newTrackId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TRACK_NOT_FOUND));
 
         // 트랙 참여자 정보 조회

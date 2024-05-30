@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TrackUpdateRequestDTO {
 
-    private String newTrackName;
+    private Long newTrackId;
 
-    public TrackUpdateRequestDTO(String newTrackName) {
-        this.newTrackName = newTrackName;
+    public TrackUpdateRequestDTO(Long newTrackId) {
+        this.newTrackId = newTrackId;
     }
 }
