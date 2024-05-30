@@ -48,6 +48,10 @@ public enum ErrorCode {
     TRACK_NOTICE_NOT_FOUND(400, "해당 트랙 공지사항을 찾을 수 없습니다."),
 
 
+    // Track Week
+    TRACK_WEEK_OVERLAP(400, "주차 기간이 겹칩니다."),
+
+
     // Unlike
 
 
