@@ -20,4 +20,8 @@ public class Track extends BaseTimeEntity {
 
     @Column(nullable = false, length = 50)
     private String trackName;
+
+    public void setTrackName(String trackName) {
+        this.trackName = trackName;
+    }
 }

@@ -30,6 +30,15 @@ public class TrackParticipants {
     @Column(nullable = false)
     private LocalDateTime joinedAt;
 
+    public void updateTrack(Track newTrack) {
+        this.track = newTrack;
+    }
+
+    public Long getTrackId() {
+        return this.id.getTrackId();
+    }
+
+
     public static class TrackParticipantsBuilder {
         private Long userId;
         private Long trackId;

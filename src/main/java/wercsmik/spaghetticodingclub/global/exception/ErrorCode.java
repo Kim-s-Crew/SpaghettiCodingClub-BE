@@ -6,6 +6,9 @@ import lombok.Getter;
 public enum ErrorCode {
 
     // Assessment
+    ASSESSMENT_NOT_FOUND(404, "평가 정보가 존재하지 않습니다."),
+
+    INVALID_ASSESSMENT_DATA(400, "평가 데이터가 유효하지 않습니다."),
 
 
     // Auth
@@ -37,6 +40,20 @@ public enum ErrorCode {
     TRACK_NAME_DUPLICATED(400, "이미 존재하는 트랙입니다."),
 
     INVALID_TRACK_NAME(400, "잘못된 트랙 이름입니다."),
+
+
+    // Track Notice
+    INVALID_NOTICE_CONTENT(400, "공지 내용이 누락되었습니다."),
+
+    TRACK_NOTICE_NOT_FOUND(400, "해당 트랙 공지사항을 찾을 수 없습니다."),
+
+
+    // Track Week
+    TRACK_WEEK_OVERLAP(400, "주차 기간이 겹칩니다."),
+
+    INVALID_DATE_RANGE(400, "종료일은 시작일보다 이전일 수 없습니다."),
+
+    START_DATE_BEFORE_CURRENT(400, "시작일은 현재 날짜보다 이전일 수 없습니다."),
 
 
     // Unlike

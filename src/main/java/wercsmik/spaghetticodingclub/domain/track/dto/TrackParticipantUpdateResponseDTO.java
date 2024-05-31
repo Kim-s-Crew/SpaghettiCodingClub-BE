@@ -1,4 +1,4 @@
-package wercsmik.spaghetticodingclub.domain.assessment.dto;
+package wercsmik.spaghetticodingclub.domain.track.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,13 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AssessmentRequestDTO {
+public class TrackParticipantUpdateResponseDTO {
 
     private Long userId;
 
-    private String background;
-
-    private String guidance;
-
-    private String relationship;
+    private String updatedTrackName;
 }

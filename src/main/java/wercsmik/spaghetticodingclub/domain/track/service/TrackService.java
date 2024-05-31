@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wercsmik.spaghetticodingclub.domain.track.dto.TrackRequestDTO;
 import wercsmik.spaghetticodingclub.domain.track.dto.TrackResponseDTO;
+import wercsmik.spaghetticodingclub.domain.track.dto.TrackUpdateResponseDTO;
 import wercsmik.spaghetticodingclub.domain.track.entity.Track;
 import wercsmik.spaghetticodingclub.domain.track.repository.TrackRepository;
 import wercsmik.spaghetticodingclub.global.exception.CustomException;
@@ -56,4 +57,23 @@ public class TrackService {
                 .map(track -> new TrackResponseDTO(track.getTrackId(), track.getTrackName()))
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public TrackUpdateResponseDTO updateTrackName(Long trackId, String newTrackName) {
+        if (newTrackName == null || newTrackName.trim().isEmpty()) {
+            throw new CustomException(ErrorCode.INVALID_TRACK_NAME);
+        }
+
+        Track track = trackRepository.findById(trackId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRACK_NOT_FOUND));
+
+        track.setTrackName(newTrackName);
+        trackRepository.save(track);
+
+        return TrackUpdateResponseDTO.builder()
+                .trackId(track.getTrackId())
+                .trackName(track.getTrackName())
+                .build();
+    }
+
 }

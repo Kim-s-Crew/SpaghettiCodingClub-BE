@@ -1,9 +1,15 @@
 package wercsmik.spaghetticodingclub.domain.track.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import wercsmik.spaghetticodingclub.domain.track.dto.TrackParticipantResponseDTO;
+import wercsmik.spaghetticodingclub.domain.track.dto.TrackParticipantUpdateResponseDTO;
 import wercsmik.spaghetticodingclub.domain.track.entity.Track;
+import wercsmik.spaghetticodingclub.domain.track.entity.TrackParticipantId;
 import wercsmik.spaghetticodingclub.domain.track.entity.TrackParticipants;
 import wercsmik.spaghetticodingclub.domain.track.repository.TrackParticipantsRepository;
 import wercsmik.spaghetticodingclub.domain.track.repository.TrackRepository;
@@ -55,5 +61,40 @@ public class TrackParticipantsService {
                         participant.getTrack().getTrackName(),
                         participant.getJoinedAt()))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public TrackParticipantUpdateResponseDTO updateParticipantTrack(Long userId, Long oldTrackId, Long newTrackId) {
+        // 관리자 권한 확인
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            throw new CustomException(ErrorCode.NO_AUTHENTICATION);
+        }
+
+        // 새 트랙의 존재 여부 확인
+        Track newTrack = trackRepository.findById(newTrackId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRACK_NOT_FOUND));
+
+        // 트랙 참여자 정보 조회
+        TrackParticipantId participantId = new TrackParticipantId(userId, oldTrackId);
+        TrackParticipants participant = trackParticipantsRepository.findById(participantId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        // 기존 트랙 참여자 정보 삭제
+        trackParticipantsRepository.delete(participant);
+
+        // 새로운 트랙 참여자 정보 생성
+        TrackParticipants newParticipant = TrackParticipants.builder()
+                .user(participant.getUser())
+                .track(newTrack)
+                .joinedAt(LocalDateTime.now())
+                .build();
+
+        trackParticipantsRepository.save(newParticipant);
+
+        return TrackParticipantUpdateResponseDTO.builder()
+                .userId(userId)
+                .updatedTrackName(newTrack.getTrackName())
+                .build();
     }
 }
