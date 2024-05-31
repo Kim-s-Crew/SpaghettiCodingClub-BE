@@ -55,6 +55,8 @@ public enum ErrorCode {
 
     START_DATE_BEFORE_CURRENT(400, "시작일은 현재 날짜보다 이전일 수 없습니다."),
 
+    TRACK_WEEK_NOT_FOUND(400, "해당 트랙 주차를 찾을 수 없습니다."),
+
 
     // Unlike
 
