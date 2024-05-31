@@ -53,6 +53,7 @@ public class TrackWeekService {
 
     @Transactional
     public TrackWeekUpdateResponseDTO updateTrackWeek(Long trackId, Long weekId, TrackWeekUpdateRequestDTO requestDTO) {
+
         if (!isAdmin()) {
             throw new CustomException(ErrorCode.NO_AUTHENTICATION);
         }
