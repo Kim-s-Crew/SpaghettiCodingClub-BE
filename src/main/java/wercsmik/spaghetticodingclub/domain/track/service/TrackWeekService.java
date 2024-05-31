@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wercsmik.spaghetticodingclub.domain.track.dto.TrackWeekCreationRequestDTO;
 import wercsmik.spaghetticodingclub.domain.track.dto.TrackWeekCreationResponseDTO;
+import wercsmik.spaghetticodingclub.domain.track.dto.TrackWeekUpdateRequestDTO;
+import wercsmik.spaghetticodingclub.domain.track.dto.TrackWeekUpdateResponseDTO;
 import wercsmik.spaghetticodingclub.domain.track.entity.Track;
 import wercsmik.spaghetticodingclub.domain.track.entity.TrackWeek;
 import wercsmik.spaghetticodingclub.domain.track.repository.TrackRepository;
@@ -16,6 +18,7 @@ import wercsmik.spaghetticodingclub.global.exception.ErrorCode;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -26,9 +29,6 @@ public class TrackWeekService {
 
     @Transactional
     public TrackWeekCreationResponseDTO createTrackWeek(Long trackId, TrackWeekCreationRequestDTO requestDTO) {
-
-        validateDateRange(requestDTO.getStartDate(), requestDTO.getEndDate());
-
         if (!isAdmin()) {
             throw new CustomException(ErrorCode.NO_AUTHENTICATION);
         }
@@ -36,6 +36,7 @@ public class TrackWeekService {
         Track track = trackRepository.findById(trackId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TRACK_NOT_FOUND));
 
+        validateDateRange(requestDTO.getStartDate(), requestDTO.getEndDate());
         validateTrackWeekDates(trackId, requestDTO.getStartDate(), requestDTO.getEndDate());
 
         TrackWeek trackWeek = TrackWeek.builder()
@@ -45,16 +46,48 @@ public class TrackWeekService {
                 .endDate(requestDTO.getEndDate())
                 .build();
 
-        TrackWeek savedTrackWeek = trackWeekRepository.save(trackWeek);
+        trackWeekRepository.save(trackWeek);
 
-        return convertToDto(savedTrackWeek);
+        return convertToDTO(trackWeek);
+    }
+
+    @Transactional
+    public TrackWeekUpdateResponseDTO updateTrackWeek(Long trackId, Long weekId, TrackWeekUpdateRequestDTO requestDTO) {
+        if (!isAdmin()) {
+            throw new CustomException(ErrorCode.NO_AUTHENTICATION);
+        }
+
+        TrackWeek trackWeek = trackWeekRepository.findById(weekId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRACK_WEEK_NOT_FOUND));
+
+        validateUpdates(trackWeek, requestDTO);
+
+        trackWeekRepository.save(trackWeek);
+
+        return new TrackWeekUpdateResponseDTO.Builder()
+                .trackWeekId(trackWeek.getTrackWeekId())
+                .weekName(trackWeek.getWeekName())
+                .startDate(trackWeek.getStartDate())
+                .endDate(trackWeek.getEndDate())
+                .build();
     }
 
     /*
         공통 로직을 메서드로 분리
      */
+    private void validateUpdates(TrackWeek trackWeek, TrackWeekUpdateRequestDTO requestDTO) {
+        Optional.ofNullable(requestDTO.getWeekName()).ifPresent(trackWeek::setWeekName);
+        Optional.ofNullable(requestDTO.getStartDate()).ifPresent(startDate -> {
+            validateDateRange(startDate, trackWeek.getEndDate());
+            trackWeek.setStartDate(startDate);
+        });
+        Optional.ofNullable(requestDTO.getEndDate()).ifPresent(endDate -> {
+            validateDateRange(trackWeek.getStartDate(), endDate);
+            trackWeek.setEndDate(endDate);
+        });
+    }
 
-    private TrackWeekCreationResponseDTO convertToDto(TrackWeek trackWeek) {
+    private TrackWeekCreationResponseDTO convertToDTO(TrackWeek trackWeek) {
 
         return TrackWeekCreationResponseDTO.builder()
                 .trackWeekId(trackWeek.getTrackWeekId())
@@ -65,7 +98,6 @@ public class TrackWeekService {
     }
 
     private void validateTrackWeekDates(Long trackId, LocalDate startDate, LocalDate endDate) {
-
         List<TrackWeek> existingWeeks = trackWeekRepository.findByTrack_TrackId(trackId);
         for (TrackWeek week : existingWeeks) {
             if (week.getStartDate().isBefore(endDate) && week.getEndDate().isAfter(startDate)) {
@@ -75,13 +107,11 @@ public class TrackWeekService {
     }
 
     private boolean isAdmin() {
-
         return SecurityContextHolder.getContext().getAuthentication()
                 .getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
     }
 
     private void validateDateRange(LocalDate startDate, LocalDate endDate) {
-
         if (startDate.isBefore(LocalDate.now())) {
             throw new CustomException(ErrorCode.START_DATE_BEFORE_CURRENT);
         }
