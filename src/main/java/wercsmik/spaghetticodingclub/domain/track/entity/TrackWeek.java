@@ -33,4 +33,16 @@ public class TrackWeek extends BaseTimeEntity {
 
     @Column(nullable = false)
     private LocalDate endDate;
+
+    public void setWeekName(String weekName) {
+        this.weekName = weekName;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
 }
