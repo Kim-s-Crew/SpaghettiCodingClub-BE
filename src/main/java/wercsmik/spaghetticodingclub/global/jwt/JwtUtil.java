@@ -29,7 +29,8 @@ public class JwtUtil {
 
     public static final String BEARER_PREFIX = "Bearer ";
 
-    public static final long ACCESS_TOKEN_TIME = 5 * 60 * 60 * 1000L; // 개발 끝난 이후 토큰 시간 60분으로 수정
+    // TODO: 개발 편의를 위해 5시간으로 설정, 개발 완료 후 ACCESS_TOKEN_TIME을 60분으로 수정
+    public static final long ACCESS_TOKEN_TIME = 5 * 60 * 60 * 1000L;
 
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
