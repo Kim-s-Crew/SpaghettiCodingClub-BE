@@ -35,6 +35,10 @@ public class AssessmentService {
         User user = userRepository.findById(assessmentRequestDTO.getUserId())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
+        if (userRepository.findById(assessmentRequestDTO.getUserId()).isPresent()) {
+            throw new CustomException(ErrorCode.ASSESSMENT_ALREADY_EXIST);
+        }
+
         // background, guidance, relationship 필드의 값을 검사하는 로직
         if (isNullOrEmpty(assessmentRequestDTO.getBackground()) &&
                 isNullOrEmpty(assessmentRequestDTO.getGuidance()) &&

@@ -49,13 +49,12 @@ public class UserService {
                 .collect(Collectors.toList());
 
         // 유저에 대한 평가 정보 조회
-        List<AssessmentResponseDTO> assessments = assessmentRepository.findAllByUserId_UserId(user.getUserId())
-                .stream()
+        AssessmentResponseDTO assessment = assessmentRepository.findFirstByUserId_UserIdOrderByCreatedAtDesc(user.getUserId())
                 .map(AssessmentResponseDTO::of)
-                .toList();
+                .orElse(null); // 평가가 없는 경우 null
 
 
-        return new ProfileResponseDTO(user, trackName, trackWeeks, assessments);
+        return new ProfileResponseDTO(user, trackName, trackWeeks, assessment);
     }
 
     public User getUser(Long userId) {
