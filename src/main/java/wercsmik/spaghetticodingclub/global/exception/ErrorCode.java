@@ -10,6 +10,8 @@ public enum ErrorCode {
 
     INVALID_ASSESSMENT_DATA(400, "평가 데이터가 유효하지 않습니다."),
 
+    ASSESSMENT_ALREADY_EXIST(400, "평가 정보가 이미 존재합니다."),
+
 
     // Auth
     PASSWORD_NOT_MATCH(401, "비밀번호가 일치하지 않습니다."),

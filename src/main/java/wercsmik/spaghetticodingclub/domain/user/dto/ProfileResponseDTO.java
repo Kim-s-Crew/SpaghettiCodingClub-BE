@@ -26,10 +26,10 @@ public class ProfileResponseDTO {
 
     private List<TrackWeekCreationResponseDTO> trackWeeks;
 
-    private List<AssessmentResponseDTO> assessments;
+    private AssessmentResponseDTO assessment;
 
 
-    public ProfileResponseDTO(User user, String trackName, List<TrackWeekCreationResponseDTO> trackWeeks, List<AssessmentResponseDTO> assessments) {
+    public ProfileResponseDTO(User user, String trackName, List<TrackWeekCreationResponseDTO> trackWeeks, AssessmentResponseDTO assessment) {
 
         this.userId = user.getUserId();
 
@@ -45,6 +45,6 @@ public class ProfileResponseDTO {
 
         this.trackWeeks = trackWeeks;
 
-        this.assessments = assessments;
+        this.assessment = assessment;
     }
 }
