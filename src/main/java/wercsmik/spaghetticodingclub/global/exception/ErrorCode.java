@@ -29,6 +29,7 @@ public enum ErrorCode {
     EMAIL_VERIFICATION_CODE_INVALID(400, "입력하신 이메일 인증 코드가 유효하지 않습니다"),
 
     // Scheduler
+    SCHEDULE_OVERLAP(400, "일정이 겹칩니다."),
 
 
     // Team
