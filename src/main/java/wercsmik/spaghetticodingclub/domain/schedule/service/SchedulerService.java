@@ -26,7 +26,7 @@ public class SchedulerService {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
 
-        User user =userDetails.getUser();
+        User user = userDetails.getUser();
 
         LocalDateTime startTime = requestDTO.getStartTime();
         LocalDateTime endTime = requestDTO.getEndTime();
