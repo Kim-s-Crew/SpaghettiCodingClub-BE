@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class SchedulerCreationRequestDTO {
 
-    private String content;
+    private String title;
 
     private LocalDateTime startTime;
 

@@ -15,19 +15,25 @@ public class SchedulerCreationResponseDTO {
 
     private Long userId;
 
-    private String content;
+    private String title;
 
     private LocalDateTime startTime;
 
     private LocalDateTime endTime;
 
+    private LocalDateTime createdAt;
+
+    private LocalDateTime modifiedAt;
+
         public static SchedulerCreationResponseDTO of(Scheduler scheduler) {
         return new SchedulerCreationResponseDTO(
                 scheduler.getSchedulerId(),
                 scheduler.getUserId().getUserId(),
-                scheduler.getContent(),
+                scheduler.getTitle(),
                 scheduler.getStartTime(),
-                scheduler.getEndTime()
+                scheduler.getEndTime(),
+                scheduler.getCreatedAt(),
+                scheduler.getModifiedAt()
         );
     }
 }

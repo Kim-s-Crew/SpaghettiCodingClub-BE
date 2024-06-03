@@ -26,27 +26,9 @@ public class SchedulerController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestBody SchedulerCreationRequestDTO requestDTO) {
 
-        if (userDetails == null) {
-            System.out.println("UserDetails is null");
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-
-        System.out.println("SchedulerController: createSchedule called with user: " + userDetails.getUsername());
-        SchedulerCreationResponseDTO schedulerResponseDTO = schedulerService.createSchedule(userDetails.getUser(), requestDTO);
+        SchedulerCreationResponseDTO schedulerResponseDTO = schedulerService.createSchedule(userDetails, requestDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(CommonResponse.of("일정 생성 성공", schedulerResponseDTO));
     }
-
-//    @PutMapping("/{weekId}")
-//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-//    public ResponseEntity<CommonResponse<TrackWeekUpdateResponseDTO>> updateTrackWeek(
-//            @PathVariable Long trackId,
-//            @PathVariable Long weekId,
-//            @RequestBody TrackWeekUpdateRequestDTO requestDTO) {
-//
-//        TrackWeekUpdateResponseDTO trackWeek = trackWeekService.updateTrackWeek(trackId, weekId, requestDTO);
-//
-//        return ResponseEntity.ok(CommonResponse.of("트랙 주차 수정 성공", trackWeek));
-//    }
 }

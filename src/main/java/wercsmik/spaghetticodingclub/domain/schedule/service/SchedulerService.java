@@ -11,6 +11,7 @@ import wercsmik.spaghetticodingclub.domain.schedule.repository.SchedulerReposito
 import wercsmik.spaghetticodingclub.domain.user.entity.User;
 import wercsmik.spaghetticodingclub.global.exception.CustomException;
 import wercsmik.spaghetticodingclub.global.exception.ErrorCode;
+import wercsmik.spaghetticodingclub.global.security.UserDetailsImpl;
 
 @Service
 @AllArgsConstructor
@@ -19,7 +20,13 @@ public class SchedulerService {
     private final SchedulerRepository schedulerRepository;
 
     @Transactional
-    public SchedulerCreationResponseDTO createSchedule(User user, SchedulerCreationRequestDTO requestDTO) {
+    public SchedulerCreationResponseDTO createSchedule(UserDetailsImpl userDetails, SchedulerCreationRequestDTO requestDTO) {
+
+        if (userDetails == null) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        User user =userDetails.getUser();
 
         LocalDateTime startTime = requestDTO.getStartTime();
         LocalDateTime endTime = requestDTO.getEndTime();
@@ -37,7 +44,7 @@ public class SchedulerService {
 
         Scheduler scheduler = Scheduler.builder()
                 .userId(user)
-                .content(requestDTO.getContent())
+                .title(requestDTO.getTitle())
                 .startTime(requestDTO.getStartTime())
                 .endTime(requestDTO.getEndTime())
                 .build();
