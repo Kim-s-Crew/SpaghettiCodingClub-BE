@@ -5,10 +5,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import wercsmik.spaghetticodingclub.domain.track.dto.TrackWeekCreationRequestDTO;
-import wercsmik.spaghetticodingclub.domain.track.dto.TrackWeekCreationResponseDTO;
-import wercsmik.spaghetticodingclub.domain.track.dto.TrackWeekUpdateRequestDTO;
-import wercsmik.spaghetticodingclub.domain.track.dto.TrackWeekUpdateResponseDTO;
+import wercsmik.spaghetticodingclub.domain.track.dto.*;
 import wercsmik.spaghetticodingclub.domain.track.entity.Track;
 import wercsmik.spaghetticodingclub.domain.track.entity.TrackWeek;
 import wercsmik.spaghetticodingclub.domain.track.repository.TrackRepository;
@@ -19,6 +16,7 @@ import wercsmik.spaghetticodingclub.global.exception.ErrorCode;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -48,7 +46,17 @@ public class TrackWeekService {
 
         trackWeekRepository.save(trackWeek);
 
-        return convertToDTO(trackWeek);
+        return convertToCreationDTO(trackWeek);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TrackWeekListResponseDTO> findAllTrackWeeksByTrackId(Long trackId) {
+
+        List<TrackWeek> trackWeeks = trackWeekRepository.findByTrack_TrackId(trackId);
+
+        return trackWeeks.stream()
+                .map(this::convertToListDTO)
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -88,9 +96,19 @@ public class TrackWeekService {
         });
     }
 
-    private TrackWeekCreationResponseDTO convertToDTO(TrackWeek trackWeek) {
+    private TrackWeekCreationResponseDTO convertToCreationDTO(TrackWeek trackWeek) {
 
         return TrackWeekCreationResponseDTO.builder()
+                .trackWeekId(trackWeek.getTrackWeekId())
+                .weekName(trackWeek.getWeekName())
+                .startDate(trackWeek.getStartDate())
+                .endDate(trackWeek.getEndDate())
+                .build();
+    }
+
+    private TrackWeekListResponseDTO convertToListDTO(TrackWeek trackWeek) {
+
+        return TrackWeekListResponseDTO.builder()
                 .trackWeekId(trackWeek.getTrackWeekId())
                 .weekName(trackWeek.getWeekName())
                 .startDate(trackWeek.getStartDate())
