@@ -5,12 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import wercsmik.spaghetticodingclub.domain.track.dto.TrackWeekCreationRequestDTO;
-import wercsmik.spaghetticodingclub.domain.track.dto.TrackWeekCreationResponseDTO;
-import wercsmik.spaghetticodingclub.domain.track.dto.TrackWeekUpdateRequestDTO;
-import wercsmik.spaghetticodingclub.domain.track.dto.TrackWeekUpdateResponseDTO;
+import wercsmik.spaghetticodingclub.domain.track.dto.*;
 import wercsmik.spaghetticodingclub.domain.track.service.TrackWeekService;
 import wercsmik.spaghetticodingclub.global.common.CommonResponse;
+
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -30,6 +29,15 @@ public class TrackWeekController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(CommonResponse.of("트랙 주차 생성 성공", trackWeek));
     }
+
+    @GetMapping
+    public ResponseEntity<CommonResponse<List<TrackWeekListResponseDTO>>> getAllTrackWeeks(
+            @PathVariable Long trackId) {
+
+        return ResponseEntity.ok()
+                .body(CommonResponse.of("트랙 주차 조회 성공", trackWeekService.findAllTrackWeeksByTrackId(trackId)));
+    }
+
 
     @PutMapping("/{weekId}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
