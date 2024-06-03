@@ -1,7 +1,6 @@
 package wercsmik.spaghetticodingclub.domain.schedule.service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +9,6 @@ import wercsmik.spaghetticodingclub.domain.schedule.dto.SchedulerCreationRespons
 import wercsmik.spaghetticodingclub.domain.schedule.entity.Scheduler;
 import wercsmik.spaghetticodingclub.domain.schedule.repository.SchedulerRepository;
 import wercsmik.spaghetticodingclub.domain.user.entity.User;
-import wercsmik.spaghetticodingclub.domain.user.repository.UserRepository;
 import wercsmik.spaghetticodingclub.global.exception.CustomException;
 import wercsmik.spaghetticodingclub.global.exception.ErrorCode;
 
@@ -19,7 +17,6 @@ import wercsmik.spaghetticodingclub.global.exception.ErrorCode;
 public class SchedulerService {
 
     private final SchedulerRepository schedulerRepository;
-    private final UserRepository userRepository;
 
     @Transactional
     public SchedulerCreationResponseDTO createSchedule(User user, SchedulerCreationRequestDTO requestDTO) {
@@ -35,7 +32,7 @@ public class SchedulerService {
         // 사용자가 이미 일정이 겹치는지 확인
         boolean hasOverlap = schedulerRepository.existsByUserIdAndStartTimeLessThanAndEndTimeGreaterThan(user, endTime, startTime);
         if (hasOverlap) {
-            throw new CustomException(ErrorCode.INVALID_DATE_RANGE);
+            throw new CustomException(ErrorCode.SCHEDULE_OVERLAP);
         }
 
         Scheduler scheduler = Scheduler.builder()
