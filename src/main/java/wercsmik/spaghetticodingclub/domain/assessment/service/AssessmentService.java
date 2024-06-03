@@ -35,7 +35,8 @@ public class AssessmentService {
         User user = userRepository.findById(assessmentRequestDTO.getUserId())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        if (userRepository.findById(assessmentRequestDTO.getUserId()).isPresent()) {
+        // 평가가 이미 존재하는지 확인하는 로직
+        if (assessmentRepository.findFirstByUserId_UserIdOrderByCreatedAtDesc(assessmentRequestDTO.getUserId()).isPresent()) {
             throw new CustomException(ErrorCode.ASSESSMENT_ALREADY_EXIST);
         }
 
@@ -79,7 +80,7 @@ public class AssessmentService {
 
     public List<AssessmentResponseDTO> getAssessmentsByUserId(Long userId) {
 
-        User user = userRepository.findById(userId)
+        userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         if (isAdmin()) {
