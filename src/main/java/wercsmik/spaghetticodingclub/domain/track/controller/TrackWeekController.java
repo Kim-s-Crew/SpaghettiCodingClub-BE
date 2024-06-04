@@ -30,12 +30,22 @@ public class TrackWeekController {
                 .body(CommonResponse.of("트랙 주차 생성 성공", trackWeek));
     }
 
+    @GetMapping("/{weekId}")
+    public ResponseEntity<CommonResponse<TrackWeekDetailResponseDTO>> getTrackWeekDetail(
+            @PathVariable Long trackId,
+            @PathVariable Long weekId) {
+
+        TrackWeekDetailResponseDTO trackWeekDetail = trackWeekService.getTrackWeekDetail(trackId, weekId);
+
+        return ResponseEntity.ok(CommonResponse.of("트랙 주차 상세 조회 성공", trackWeekDetail));
+    }
+
     @GetMapping
     public ResponseEntity<CommonResponse<List<TrackWeekListResponseDTO>>> getAllTrackWeeks(
             @PathVariable Long trackId) {
 
         return ResponseEntity.ok()
-                .body(CommonResponse.of("트랙 주차 조회 성공", trackWeekService.findAllTrackWeeksByTrackId(trackId)));
+                .body(CommonResponse.of("트랙 주차 목록 조회 성공", trackWeekService.findAllTrackWeeksByTrackId(trackId)));
     }
 
 

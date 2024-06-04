@@ -5,9 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import wercsmik.spaghetticodingclub.domain.team.entity.Team;
 import wercsmik.spaghetticodingclub.global.auditing.BaseTimeEntity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,6 +36,9 @@ public class TrackWeek extends BaseTimeEntity {
 
     @Column(nullable = false)
     private LocalDate endDate;
+
+    @OneToMany(mappedBy = "trackWeek", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Team> teams = new ArrayList<>();
 
     public void setWeekName(String weekName) {
         this.weekName = weekName;

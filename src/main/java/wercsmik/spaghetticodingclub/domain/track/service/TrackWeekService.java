@@ -5,6 +5,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import wercsmik.spaghetticodingclub.domain.team.dto.TeamDetailResponseDTO;
+import wercsmik.spaghetticodingclub.domain.team.dto.TeamMemberDetailResponseDTO;
+import wercsmik.spaghetticodingclub.domain.team.entity.Team;
+import wercsmik.spaghetticodingclub.domain.team.repository.TeamMemberRepository;
 import wercsmik.spaghetticodingclub.domain.track.dto.*;
 import wercsmik.spaghetticodingclub.domain.track.entity.Track;
 import wercsmik.spaghetticodingclub.domain.track.entity.TrackWeek;
@@ -24,9 +28,11 @@ public class TrackWeekService {
 
     private final TrackWeekRepository trackWeekRepository;
     private final TrackRepository trackRepository;
+    private final TeamMemberRepository teamMemberRepository;
 
     @Transactional
     public TrackWeekCreationResponseDTO createTrackWeek(Long trackId, TrackWeekCreationRequestDTO requestDTO) {
+
         if (!isAdmin()) {
             throw new CustomException(ErrorCode.NO_AUTHENTICATION);
         }
@@ -47,6 +53,28 @@ public class TrackWeekService {
         trackWeekRepository.save(trackWeek);
 
         return convertToCreationDTO(trackWeek);
+    }
+
+    @Transactional(readOnly = true)
+    public TrackWeekDetailResponseDTO getTrackWeekDetail(Long trackId, Long trackWeekId) {
+
+        Track track = trackRepository.findById(trackId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRACK_NOT_FOUND));
+
+        TrackWeek trackWeek = trackWeekRepository.findById(trackWeekId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRACK_WEEK_NOT_FOUND));
+
+        List<TeamDetailResponseDTO> teamDetails = trackWeek.getTeams().stream()
+                .map(this::mapToTeamDetailDTO)
+                .collect(Collectors.toList());
+
+        return TrackWeekDetailResponseDTO.builder()
+                .trackWeekId(trackWeek.getTrackWeekId())
+                .weekName(trackWeek.getWeekName())
+                .startDate(trackWeek.getStartDate())
+                .endDate(trackWeek.getEndDate())
+                .teams(teamDetails)
+                .build();
     }
 
     @Transactional(readOnly = true)
@@ -138,4 +166,21 @@ public class TrackWeekService {
             throw new CustomException(ErrorCode.INVALID_DATE_RANGE);
         }
     }
+
+    private TeamDetailResponseDTO mapToTeamDetailDTO(Team team) {
+        List<TeamMemberDetailResponseDTO> memberDetails = teamMemberRepository.findByTeam_TeamId(team.getTeamId()).stream()
+                .map(teamMember -> new TeamMemberDetailResponseDTO(
+                        teamMember.getUser().getUserId(),
+                        teamMember.getUser().getUsername()
+                ))
+                .collect(Collectors.toList());
+
+        return new TeamDetailResponseDTO(
+                team.getTeamId(),
+                team.getTeamName(),
+                memberDetails
+        );
+    }
+
+
 }
