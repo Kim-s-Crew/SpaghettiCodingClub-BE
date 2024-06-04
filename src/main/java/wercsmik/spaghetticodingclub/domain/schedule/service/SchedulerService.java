@@ -1,13 +1,18 @@
 package wercsmik.spaghetticodingclub.domain.schedule.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wercsmik.spaghetticodingclub.domain.schedule.dto.SchedulerCreationRequestDTO;
 import wercsmik.spaghetticodingclub.domain.schedule.dto.SchedulerCreationResponseDTO;
+import wercsmik.spaghetticodingclub.domain.schedule.dto.SchedulerResponseDTO;
 import wercsmik.spaghetticodingclub.domain.schedule.entity.Scheduler;
 import wercsmik.spaghetticodingclub.domain.schedule.repository.SchedulerRepository;
+import wercsmik.spaghetticodingclub.domain.team.entity.TeamMember;
+import wercsmik.spaghetticodingclub.domain.team.repository.TeamMemberRepository;
 import wercsmik.spaghetticodingclub.domain.user.entity.User;
 import wercsmik.spaghetticodingclub.global.exception.CustomException;
 import wercsmik.spaghetticodingclub.global.exception.ErrorCode;
@@ -18,6 +23,7 @@ import wercsmik.spaghetticodingclub.global.security.UserDetailsImpl;
 public class SchedulerService {
 
     private final SchedulerRepository schedulerRepository;
+    private final TeamMemberRepository teamMemberRepository;
 
     @Transactional
     public SchedulerCreationResponseDTO createSchedule(UserDetailsImpl userDetails, SchedulerCreationRequestDTO requestDTO) {
@@ -52,5 +58,27 @@ public class SchedulerService {
         Scheduler savedSchedule = schedulerRepository.save(scheduler);
 
         return SchedulerCreationResponseDTO.of(savedSchedule);
+    }
+
+    @Transactional(readOnly = true)
+    public List<SchedulerResponseDTO> getTeamSchedules(Long teamId) {
+
+        // 팀Id 조회
+        List<TeamMember> teamTeamId = teamMemberRepository.findByTeam_TeamId(teamId);
+
+        if (teamTeamId.isEmpty()) {
+            throw new CustomException(ErrorCode.TEAM_NOT_FOUND);
+        }
+
+        // 팀 멤버들의 유저 리스트를 생성
+        List<User> users = teamTeamId.stream()
+                .map(TeamMember::getUser)
+                .collect(Collectors.toList());
+
+        List<Scheduler> schedules = schedulerRepository.findByUserIdIn(users);
+
+        return schedules.stream()
+                .map(SchedulerResponseDTO::of)
+                .collect(Collectors.toList());
     }
 }
