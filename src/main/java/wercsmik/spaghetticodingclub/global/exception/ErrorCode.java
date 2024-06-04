@@ -31,8 +31,13 @@ public enum ErrorCode {
     // Scheduler
     SCHEDULE_OVERLAP(400, "일정이 겹칩니다."),
 
+    SCHEDULE_NOT_FOUND(404, "일정이 존재하지 않습니다."),
+
 
     // Team
+    TEAM_NOT_FOUND(400, "팀을 찾을 수 없습니다."),
+
+    TEAM_MEMBERS_NOT_FOUND(400, "팀원 들을 찾을 수 없습니다."),
 
 
     // Track
