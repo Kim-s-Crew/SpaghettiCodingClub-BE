@@ -11,8 +11,10 @@ import wercsmik.spaghetticodingclub.domain.schedule.dto.SchedulerCreationRespons
 import wercsmik.spaghetticodingclub.domain.schedule.dto.SchedulerResponseDTO;
 import wercsmik.spaghetticodingclub.domain.schedule.entity.Scheduler;
 import wercsmik.spaghetticodingclub.domain.schedule.repository.SchedulerRepository;
+import wercsmik.spaghetticodingclub.domain.team.entity.Team;
 import wercsmik.spaghetticodingclub.domain.team.entity.TeamMember;
 import wercsmik.spaghetticodingclub.domain.team.repository.TeamMemberRepository;
+import wercsmik.spaghetticodingclub.domain.team.repository.TeamRepository;
 import wercsmik.spaghetticodingclub.domain.user.entity.User;
 import wercsmik.spaghetticodingclub.global.exception.CustomException;
 import wercsmik.spaghetticodingclub.global.exception.ErrorCode;
@@ -23,6 +25,7 @@ import wercsmik.spaghetticodingclub.global.security.UserDetailsImpl;
 public class SchedulerService {
 
     private final SchedulerRepository schedulerRepository;
+    private final TeamRepository teamRepository;
     private final TeamMemberRepository teamMemberRepository;
 
     @Transactional
@@ -63,15 +66,17 @@ public class SchedulerService {
     @Transactional(readOnly = true)
     public List<SchedulerResponseDTO> getTeamSchedules(Long teamId) {
 
-        // 팀Id 조회
-        List<TeamMember> teamTeamId = teamMemberRepository.findByTeam_TeamId(teamId);
+        Team team = teamRepository.findById(teamId) // 팀 조회
+                .orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
 
-        if (teamTeamId.isEmpty()) {
-            throw new CustomException(ErrorCode.TEAM_NOT_FOUND);
+        List<TeamMember> teamMembers = teamMemberRepository.findByTeam_TeamId(teamId); // 팀 멤버 조회
+
+        if (teamMembers.isEmpty()) {
+            throw new CustomException(ErrorCode.TEAM_MEMBERS_NOT_FOUND);
         }
 
         // 팀 멤버들의 유저 리스트를 생성
-        List<User> users = teamTeamId.stream()
+        List<User> users = teamMembers.stream()
                 .map(TeamMember::getUser)
                 .collect(Collectors.toList());
 
