@@ -12,7 +12,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -34,6 +37,7 @@ public class JwtUtil {
 
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
+    private final Set<String> tokenBlacklist = Collections.synchronizedSet(new HashSet<>());
 
     @Value("${jwt.secretKey}")
     private String jwtSecretKey;
@@ -53,7 +57,19 @@ public class JwtUtil {
         return null;
     }
 
+    public void deleteToken(HttpServletRequest request) {
+        String token = resolveAccessToken(request);
+        if (token != null) {
+            tokenBlacklist.add(token);
+        }
+    }
+
     public boolean validateToken(String token) {
+        if (tokenBlacklist.contains(token)) {
+            log.info("Token is blacklisted");
+            return false;
+        }
+
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
@@ -85,7 +101,6 @@ public class JwtUtil {
                         .signWith(key, signatureAlgorithm)
                         .compact();
     }
-
 
     public void addJwtToHeader(String accessToken, HttpServletResponse response) {
         if (!accessToken.startsWith(BEARER_PREFIX)) {

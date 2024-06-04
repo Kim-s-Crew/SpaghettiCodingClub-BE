@@ -1,5 +1,6 @@
 package wercsmik.spaghetticodingclub.domain.auth.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,6 +13,7 @@ import wercsmik.spaghetticodingclub.domain.user.entity.UserRoleEnum;
 import wercsmik.spaghetticodingclub.domain.user.repository.UserRepository;
 import wercsmik.spaghetticodingclub.global.exception.CustomException;
 import wercsmik.spaghetticodingclub.global.exception.ErrorCode;
+import wercsmik.spaghetticodingclub.global.jwt.JwtUtil;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +23,7 @@ public class AuthService {
     private final TrackRepository trackRepository;
     private final PasswordEncoder passwordEncoder;
     private final TrackParticipantsService trackParticipantsService;
+    private final JwtUtil jwtUtil;
 
     public void signup(SignRequestDTO signRequestDTO) {
 
@@ -69,5 +72,10 @@ public class AuthService {
         if (role == UserRoleEnum.USER) {
             trackParticipantsService.addParticipant(user.getUserId(), trackName);
         }
+    }
+
+    public void logout(HttpServletRequest request) {
+
+        jwtUtil.deleteToken(request);
     }
 }
