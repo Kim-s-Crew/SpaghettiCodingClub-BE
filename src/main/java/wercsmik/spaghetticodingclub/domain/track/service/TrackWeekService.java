@@ -68,6 +68,10 @@ public class TrackWeekService {
                 .map(this::mapToTeamDetailDTO)
                 .collect(Collectors.toList());
 
+        teamDetails = teamDetails.stream()
+                .filter(team -> !team.getMembers().isEmpty())
+                .collect(Collectors.toList());
+
         return TrackWeekDetailResponseDTO.builder()
                 .trackWeekId(trackWeek.getTrackWeekId())
                 .weekName(trackWeek.getWeekName())
@@ -80,6 +84,9 @@ public class TrackWeekService {
     @Transactional(readOnly = true)
     public List<TrackWeekListResponseDTO> findAllTrackWeeksByTrackId(Long trackId) {
 
+        Track track = trackRepository.findById(trackId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRACK_NOT_FOUND));
+
         List<TrackWeek> trackWeeks = trackWeekRepository.findByTrack_TrackId(trackId);
 
         return trackWeeks.stream()
@@ -89,6 +96,9 @@ public class TrackWeekService {
 
     @Transactional
     public TrackWeekUpdateResponseDTO updateTrackWeek(Long trackId, Long weekId, TrackWeekUpdateRequestDTO requestDTO) {
+
+        Track track = trackRepository.findById(trackId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRACK_NOT_FOUND));
 
         if (!isAdmin()) {
             throw new CustomException(ErrorCode.NO_AUTHENTICATION);
