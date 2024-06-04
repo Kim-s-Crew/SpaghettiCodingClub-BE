@@ -33,4 +33,12 @@ public class TeamMember {
     @Column(nullable = false)
     @CreatedDate
     private LocalDateTime joinedAt;
+
+    public Long getUserId() {
+        return user.getUserId();
+    }
+
+    public String getUsername() {
+        return user.getUsername();
+    }
 }
