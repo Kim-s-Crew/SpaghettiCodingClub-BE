@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wercsmik.spaghetticodingclub.domain.schedule.dto.SchedulerCreationRequestDTO;
 import wercsmik.spaghetticodingclub.domain.schedule.dto.SchedulerCreationResponseDTO;
+import wercsmik.spaghetticodingclub.domain.schedule.dto.SchedulerDateRangeRequestDTO;
 import wercsmik.spaghetticodingclub.domain.schedule.dto.SchedulerResponseDTO;
 import wercsmik.spaghetticodingclub.domain.schedule.service.SchedulerService;
 import wercsmik.spaghetticodingclub.global.common.CommonResponse;
@@ -43,5 +44,15 @@ public class SchedulerController {
         List<SchedulerResponseDTO> schedules = schedulerService.getTeamSchedules(teamId);
 
         return ResponseEntity.ok(CommonResponse.of("팀내 모든 일정 조회 성공", schedules));
+    }
+
+    @GetMapping("/teams/{teamId}/date-range")
+    public ResponseEntity<CommonResponse<List<SchedulerResponseDTO>>> getTeamSchedulesByDateRange(
+            @PathVariable Long teamId,
+            @RequestBody SchedulerDateRangeRequestDTO dateRangeRequestDTO) {
+
+        List<SchedulerResponseDTO> schedules = schedulerService.getTeamSchedulesByDateRange(teamId, dateRangeRequestDTO.getStartDate(), dateRangeRequestDTO.getEndDate());
+
+        return ResponseEntity.ok(CommonResponse.of("특정 날짜 범위 내 팀내 일정 조회 성공", schedules));
     }
 }

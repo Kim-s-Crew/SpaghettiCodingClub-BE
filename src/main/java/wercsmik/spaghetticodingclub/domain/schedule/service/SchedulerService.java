@@ -86,4 +86,26 @@ public class SchedulerService {
                 .map(SchedulerResponseDTO::of)
                 .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public List<SchedulerResponseDTO> getTeamSchedulesByDateRange(Long teamId, LocalDateTime startDate, LocalDateTime endDate) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
+
+        List<TeamMember> teamMembers = teamMemberRepository.findByTeam_TeamId(teamId);
+
+        if (teamMembers.isEmpty()) {
+            throw new CustomException(ErrorCode.TEAM_MEMBERS_NOT_FOUND);
+        }
+
+        List<User> users = teamMembers.stream()
+                .map(TeamMember::getUser)
+                .collect(Collectors.toList());
+
+        List<Scheduler> schedules = schedulerRepository.findByUserIdInAndDateRange(users, startDate, endDate);
+
+        return schedules.stream()
+                .map(SchedulerResponseDTO::of)
+                .collect(Collectors.toList());
+    }
 }
