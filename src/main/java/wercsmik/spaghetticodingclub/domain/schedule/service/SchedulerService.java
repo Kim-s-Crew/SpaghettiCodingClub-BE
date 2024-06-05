@@ -89,6 +89,7 @@ public class SchedulerService {
 
     @Transactional(readOnly = true)
     public List<SchedulerResponseDTO> getTeamSchedulesByDateRange(Long teamId, LocalDateTime startDate, LocalDateTime endDate) {
+
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
 
