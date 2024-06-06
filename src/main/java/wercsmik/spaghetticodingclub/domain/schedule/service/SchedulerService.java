@@ -29,7 +29,8 @@ public class SchedulerService {
     private final TeamMemberRepository teamMemberRepository;
 
     @Transactional
-    public SchedulerCreationResponseDTO createSchedule(UserDetailsImpl userDetails, SchedulerCreationRequestDTO requestDTO) {
+    public SchedulerCreationResponseDTO createSchedule(UserDetailsImpl userDetails,
+            SchedulerCreationRequestDTO requestDTO) {
 
         if (userDetails == null) {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
@@ -46,7 +47,8 @@ public class SchedulerService {
         }
 
         // 사용자가 이미 일정이 겹치는지 확인
-        boolean hasOverlap = schedulerRepository.existsByUserIdAndStartTimeLessThanAndEndTimeGreaterThan(user, endTime, startTime);
+        boolean hasOverlap = schedulerRepository.existsByUserIdAndStartTimeLessThanAndEndTimeGreaterThan(
+                user, endTime, startTime);
         if (hasOverlap) {
             throw new CustomException(ErrorCode.SCHEDULE_OVERLAP);
         }
@@ -87,8 +89,8 @@ public class SchedulerService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public List<SchedulerResponseDTO> getTeamSchedulesByDateRange(Long teamId, LocalDateTime startDate, LocalDateTime endDate) {
+    public List<SchedulerResponseDTO> getTeamSchedulesByDateRange(Long teamId,
+            LocalDateTime startDate, LocalDateTime endDate) {
 
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
@@ -103,7 +105,8 @@ public class SchedulerService {
                 .map(TeamMember::getUser)
                 .collect(Collectors.toList());
 
-        List<Scheduler> schedules = schedulerRepository.findByUserIdInAndDateRange(users, startDate, endDate);
+        List<Scheduler> schedules = schedulerRepository.findByUserIdInAndDateRange(users, startDate,
+                endDate);
 
         return schedules.stream()
                 .map(SchedulerResponseDTO::of)
