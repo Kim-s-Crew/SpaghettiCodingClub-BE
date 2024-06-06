@@ -39,4 +39,16 @@ public class Scheduler extends BaseTimeEntity {
 
     @Column(nullable = false)
     private LocalDateTime endTime;
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
 }
