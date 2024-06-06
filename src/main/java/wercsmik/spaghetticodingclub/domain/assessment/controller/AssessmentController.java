@@ -46,7 +46,8 @@ public class AssessmentController{
 
         List<AssessmentResponseDTO> assessments = assessmentService.getAllAssessment();
 
-        return ResponseEntity.ok().body(CommonResponse.of("평가 전체 조회 성공", assessments));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(CommonResponse.of("평가 전체 조회 성공", assessments));
     }
 
     @GetMapping("/{userId}")
@@ -55,7 +56,8 @@ public class AssessmentController{
 
         List<AssessmentResponseDTO> assessments = assessmentService.getAssessmentsByUserId(userId);
 
-        return ResponseEntity.ok().body(CommonResponse.of("특정 사용자 평가 조회 성공", assessments));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(CommonResponse.of("특정 사용자 평가 조회 성공", assessments));
     }
 
     @PatchMapping("/{assessmentId}")
@@ -65,7 +67,7 @@ public class AssessmentController{
 
         AssessmentResponseDTO updatedAssessment = assessmentService.updateAssessment(assessmentId, updateAssessmentRequestDTO);
 
-        return ResponseEntity.ok().body(CommonResponse.of("평가 수정 성공", updatedAssessment));
+        return ResponseEntity.status(HttpStatus.OK).body(CommonResponse.of("평가 수정 성공", updatedAssessment));
     }
 
     @DeleteMapping("/{assessmentId}")
@@ -74,6 +76,6 @@ public class AssessmentController{
 
         assessmentService.deleteAssessment(assessmentId);
 
-        return ResponseEntity.ok().body(CommonResponse.of("평가 삭제 성공", null));
+        return ResponseEntity.status(HttpStatus.OK).body(CommonResponse.of("평가 삭제 성공", null));
     }
 }
