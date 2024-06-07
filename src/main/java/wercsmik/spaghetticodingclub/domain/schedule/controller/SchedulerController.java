@@ -72,6 +72,7 @@ public class SchedulerController {
 
         SchedulerResponseDTO schedulerResponseDTO = schedulerService.updateSchedule(schedulerId, userDetails, requestDTO);
 
-        return ResponseEntity.ok(CommonResponse.of("일정 수정 성공", schedulerResponseDTO));
+        return ResponseEntity.status(HttpStatus.OK).
+                body(CommonResponse.of("일정 수정 성공", schedulerResponseDTO));
     }
 }
