@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import wercsmik.spaghetticodingclub.domain.schedule.dto.SchedulerCreationRequestDTO;
 import wercsmik.spaghetticodingclub.domain.schedule.dto.SchedulerCreationResponseDTO;
 import wercsmik.spaghetticodingclub.domain.schedule.dto.SchedulerResponseDTO;
+import wercsmik.spaghetticodingclub.domain.schedule.dto.SchedulerUpdateRequestDTO;
 import wercsmik.spaghetticodingclub.domain.schedule.entity.Scheduler;
 import wercsmik.spaghetticodingclub.domain.schedule.repository.SchedulerRepository;
 import wercsmik.spaghetticodingclub.domain.team.entity.Team;
@@ -111,5 +112,59 @@ public class SchedulerService {
         return schedules.stream()
                 .map(SchedulerResponseDTO::of)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public SchedulerResponseDTO updateSchedule(Long schedulerId, UserDetailsImpl userDetails,
+            SchedulerUpdateRequestDTO requestDTO) {
+
+        if (userDetails == null) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        Scheduler scheduler = schedulerRepository.findById(schedulerId)
+                .orElseThrow(() -> new CustomException(ErrorCode.SCHEDULE_NOT_FOUND));
+
+        User user = userDetails.getUser();
+
+        // 사용자가 해당 일정을 소유하고 있는지 확인
+        if (!scheduler.getUserId().getUserId().equals(user.getUserId())) {
+            throw new CustomException(ErrorCode.NO_AUTHENTICATION);
+        }
+
+        LocalDateTime newStartTime = requestDTO.getStartTime();
+        LocalDateTime newEndTime = requestDTO.getEndTime();
+
+        // StartTime 또는 EndTime이 업데이트되는지 여부 확인
+        boolean isTimeBeingUpdated = (newStartTime != null || newEndTime != null);
+
+        // 새로운 시간이 제공되지 않은 경우 기존 시간 사용
+        LocalDateTime startTime = (newStartTime != null) ? newStartTime : scheduler.getStartTime();
+        LocalDateTime endTime = (newEndTime != null) ? newEndTime : scheduler.getEndTime();
+
+        // 종료 시간이 시작 시간보다 이전이면 예외 발생
+        if (isTimeBeingUpdated && endTime.isBefore(startTime)) {
+            throw new CustomException(ErrorCode.INVALID_DATE_RANGE);
+        }
+
+        // 시간 업데이트가 있을 경우에만 겹침 검사 수행
+        if (isTimeBeingUpdated) {
+            boolean hasOverlap = schedulerRepository.existsByUserIdAndSchedulerIdNotAndTimeRangeOverlap(
+                    user, schedulerId, startTime, endTime);
+            if (hasOverlap) {
+                throw new CustomException(ErrorCode.SCHEDULE_OVERLAP);
+            }
+        }
+
+        // 제목이 null이 아니면 업데이트
+        if (requestDTO.getTitle() != null) {
+            scheduler.setTitle(requestDTO.getTitle());
+        }
+        scheduler.setStartTime(startTime);
+        scheduler.setEndTime(endTime);
+
+        Scheduler updatedScheduler = schedulerRepository.save(scheduler);
+
+        return SchedulerResponseDTO.of(updatedScheduler);
     }
 }

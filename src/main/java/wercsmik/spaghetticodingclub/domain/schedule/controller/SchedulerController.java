@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import wercsmik.spaghetticodingclub.domain.schedule.dto.SchedulerCreationRequestDTO;
 import wercsmik.spaghetticodingclub.domain.schedule.dto.SchedulerCreationResponseDTO;
 import wercsmik.spaghetticodingclub.domain.schedule.dto.SchedulerResponseDTO;
+import wercsmik.spaghetticodingclub.domain.schedule.dto.SchedulerUpdateRequestDTO;
 import wercsmik.spaghetticodingclub.domain.schedule.service.SchedulerService;
 import wercsmik.spaghetticodingclub.global.common.CommonResponse;
 import wercsmik.spaghetticodingclub.global.security.UserDetailsImpl;
@@ -60,5 +62,17 @@ public class SchedulerController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(CommonResponse.of("특정 날짜 범위 내 팀내 일정 조회 성공", schedules));
+    }
+
+    @PutMapping("/{schedulerId}")
+    public ResponseEntity<CommonResponse<SchedulerResponseDTO>> updateSchedule(
+            @PathVariable Long schedulerId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestBody SchedulerUpdateRequestDTO requestDTO) {
+
+        SchedulerResponseDTO schedulerResponseDTO = schedulerService.updateSchedule(schedulerId, userDetails, requestDTO);
+
+        return ResponseEntity.status(HttpStatus.OK).
+                body(CommonResponse.of("일정 수정 성공", schedulerResponseDTO));
     }
 }

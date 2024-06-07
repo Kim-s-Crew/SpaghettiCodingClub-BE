@@ -17,4 +17,7 @@ public interface SchedulerRepository extends JpaRepository<Scheduler, Long> {
 
     @Query("SELECT s FROM Scheduler s WHERE s.userId IN :users AND (s.startTime >= :startDate AND s.startTime <= :endDate OR s.endTime >= :startDate AND s.endTime <= :endDate OR s.startTime < :startDate AND s.endTime > :endDate)")
     List<Scheduler> findByUserIdInAndDateRange(@Param("users") List<User> users, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
+    @Query("SELECT COUNT(s) > 0 FROM Scheduler s WHERE s.userId = :user AND s.schedulerId != :schedulerId AND (s.startTime < :endTime AND s.endTime > :startTime)")
+    boolean existsByUserIdAndSchedulerIdNotAndTimeRangeOverlap(@Param("user") User user, @Param("schedulerId") Long schedulerId, @Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
 }
