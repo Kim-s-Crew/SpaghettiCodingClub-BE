@@ -17,7 +17,7 @@ public class UnlikeCreationResponseDTO {
 
     private String cause;
 
-    public UnlikeCreationResponseDTO(Long unlikeId, Long senderUserId, Long teamId, Long receiverUserId, String cause) {
+    public UnlikeCreationResponseDTO(Long unlikeId, Long senderUserId, Long receiverUserId, Long teamId, String cause) {
         this.unlikeId = unlikeId;
         this.senderUserId = senderUserId;
         this.receiverUserId = receiverUserId;
