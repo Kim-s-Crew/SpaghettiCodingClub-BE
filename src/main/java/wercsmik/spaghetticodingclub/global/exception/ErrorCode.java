@@ -67,7 +67,7 @@ public enum ErrorCode {
 
 
     // Unlike
-
+    UNLIKE_ALREADY_EXISTS(400, "이미 비호감도를 생성하셨습니다."),
 
     // Jwt
     INVALID_JWT_SIGNATURE(401, "유효하지 않는 JWT 서명 입니다."),
