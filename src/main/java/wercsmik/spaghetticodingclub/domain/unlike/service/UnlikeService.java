@@ -26,30 +26,35 @@ public class UnlikeService {
     private final UserRepository userRepository;
 
     @Transactional
-    public UnlikeCreationResponseDTO createUnlike(UnlikeCreationRequestDTO unlikeRequestDto) {
-        validateTeamMembers(unlikeRequestDto.getSenderUserId(), unlikeRequestDto.getReceiverUserId(), unlikeRequestDto.getTeamId());
+    public UnlikeCreationResponseDTO createUnlike(UnlikeCreationRequestDTO requestDTO) {
 
-        User sender = userRepository.findById(unlikeRequestDto.getSenderUserId())
+        validateTeamMembers(requestDTO.getSenderUserId(), requestDTO.getReceiverUserId(), requestDTO.getTeamId());
+
+        User sender = userRepository.findById(requestDTO.getSenderUserId())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        User receiver = userRepository.findById(unlikeRequestDto.getReceiverUserId())
+        User receiver = userRepository.findById(requestDTO.getReceiverUserId())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        if (unlikeRepository.existsBySenderUserIdAndTeam_TeamId(requestDTO.getSenderUserId(), requestDTO.getTeamId())) {
+            throw new CustomException(ErrorCode.UNLIKE_ALREADY_EXISTS);
+        }
 
         LocalDateTime now = LocalDateTime.now();
 
         Unlike unlike = Unlike.builder()
                 .sender(sender)
                 .receiver(receiver)
-                .team(teamMemberRepository.findByTeam_TeamId(unlikeRequestDto.getTeamId()).stream()
+                .team(teamMemberRepository.findByTeam_TeamId(requestDTO.getTeamId()).stream()
                         .findFirst()
                         .map(TeamMember::getTeam)
                         .orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND)))
-                .cause(unlikeRequestDto.getCause())
+                .cause(requestDTO.getCause())
                 .createdAt(now)
                 .build();
 
         unlikeRepository.save(unlike);
 
-        return new UnlikeCreationResponseDTO(unlike.getUnlikeId(), sender.getUserId(), receiver.getUserId(), unlikeRequestDto.getTeamId(), unlike.getCause());
+        return new UnlikeCreationResponseDTO(unlike.getUnlikeId(), sender.getUserId(), receiver.getUserId(), requestDTO.getTeamId(), unlike.getCause());
     }
 
     /*
