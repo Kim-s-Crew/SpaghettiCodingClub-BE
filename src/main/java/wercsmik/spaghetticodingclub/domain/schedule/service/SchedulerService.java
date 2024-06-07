@@ -167,4 +167,18 @@ public class SchedulerService {
 
         return SchedulerResponseDTO.of(updatedScheduler);
     }
+
+    @Transactional
+    public void deleteSchedule(Long schedulerId, UserDetailsImpl userDetails) {
+
+        Scheduler schedule = schedulerRepository.findById(schedulerId)
+                .orElseThrow(() -> new CustomException(ErrorCode.SCHEDULE_NOT_FOUND));
+
+        // 사용자가 해당 일정을 소유하고 있는지 확인
+        if (!schedule.getUserId().getUserId().equals(userDetails.getUser().getUserId())) {
+            throw new CustomException(ErrorCode.NO_AUTHENTICATION);
+        }
+
+        schedulerRepository.delete(schedule);
+    }
 }
