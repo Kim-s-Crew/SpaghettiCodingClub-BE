@@ -97,4 +97,10 @@ public class TrackParticipantsService {
                 .updatedTrackName(newTrack.getTrackName())
                 .build();
     }
+
+    @Transactional
+    public void removeParticipant(Long userId) {
+        List<TrackParticipants> participants = trackParticipantsRepository.findByUserUserId(userId);
+        trackParticipantsRepository.deleteAll(participants);
+    }
 }
