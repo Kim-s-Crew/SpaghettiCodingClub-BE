@@ -4,6 +4,8 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import wercsmik.spaghetticodingclub.domain.auth.dto.DeleteRequestDTO;
 import wercsmik.spaghetticodingclub.domain.auth.dto.SignRequestDTO;
 import wercsmik.spaghetticodingclub.domain.track.repository.TrackRepository;
 import wercsmik.spaghetticodingclub.domain.track.service.TrackParticipantsService;
@@ -12,6 +14,7 @@ import wercsmik.spaghetticodingclub.domain.user.entity.UserRoleEnum;
 import wercsmik.spaghetticodingclub.domain.user.repository.UserRepository;
 import wercsmik.spaghetticodingclub.global.exception.CustomException;
 import wercsmik.spaghetticodingclub.global.exception.ErrorCode;
+import wercsmik.spaghetticodingclub.global.security.UserDetailsImpl;
 
 @Service
 @RequiredArgsConstructor
@@ -69,5 +72,23 @@ public class AuthService {
         if (role == UserRoleEnum.USER) {
             trackParticipantsService.addParticipant(user.getUserId(), trackName);
         }
+    }
+
+    @Transactional
+    public void withDrawUser(UserDetailsImpl userDetails, DeleteRequestDTO deleteRequestDTO) {
+        Long userId = userDetails.getUser().getUserId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        // 비밀번호 확인
+        if (!passwordEncoder.matches(deleteRequestDTO.getPassword(), user.getPassword())) {
+            throw new CustomException(ErrorCode.PASSWORD_MISMATCH_EXCEPTION);
+        }
+
+        // 트랙 참여자 목록에서 제거
+        trackParticipantsService.removeParticipant(userId);
+
+        // 유저 삭제
+        userRepository.delete(user);
     }
 }
