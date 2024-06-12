@@ -36,11 +36,11 @@ public class AuthController {
     }
 
     @DeleteMapping("/withDraw")
-    public ResponseEntity<CommonResponse<Void>> deleteUser(
+    public ResponseEntity<CommonResponse<Void>> withDrawUser(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Valid @RequestBody DeleteRequestDTO deleteRequestDTO) {
 
-        authService.deleteUser(userDetails, deleteRequestDTO);
+        authService.withDrawUser(userDetails, deleteRequestDTO);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(CommonResponse.of("유저 삭제 성공", null));

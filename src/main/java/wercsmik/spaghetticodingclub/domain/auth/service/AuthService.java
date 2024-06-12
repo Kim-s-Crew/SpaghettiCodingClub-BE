@@ -75,7 +75,7 @@ public class AuthService {
     }
 
     @Transactional
-    public void deleteUser(UserDetailsImpl userDetails, DeleteRequestDTO deleteRequestDTO) {
+    public void withDrawUser(UserDetailsImpl userDetails, DeleteRequestDTO deleteRequestDTO) {
         Long userId = userDetails.getUser().getUserId();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
