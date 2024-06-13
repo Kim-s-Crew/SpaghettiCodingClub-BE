@@ -80,9 +80,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         List<TrackParticipants> trackParticipants = trackParticipantsRepository.findByUserUserId(user.getUserId());
         String trackName = trackParticipants.stream().findFirst()
                 .map(participant -> participant.getTrack().getTrackName())
-                .orElse("참여된 트랙 없음"); // 사용자가 어떤 트랙에도 참여하지 않았다면 기본값 설정
+                .orElse("참여된 트랙 없음");
+        Long trackId = trackParticipants.stream().findFirst()
+                .map(participant -> participant.getTrack().getTrackId())
+                .orElse(null); // 트랙 ID 가져오기
 
-        LoginResponseDTO loginResponseDTO = new LoginResponseDTO(user.getUserId(), user.getUsername(), user.getEmail(), trackName, user.getRole(), user.getRecommendEmail());
+        LoginResponseDTO loginResponseDTO = new LoginResponseDTO(user.getUserId(), user.getUsername(), user.getEmail(), trackName, trackId, user.getRole(), user.getRecommendEmail());
 
         // CommonResponse 객체 생성
         CommonResponse<LoginResponseDTO> commonResponse = CommonResponse.of("로그인 성공", loginResponseDTO);
