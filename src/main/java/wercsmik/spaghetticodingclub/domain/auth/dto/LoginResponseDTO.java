@@ -17,12 +17,13 @@ public class LoginResponseDTO {
 
     private String track;
 
+    private Long trackId;
+
     private UserRoleEnum role;
 
     private String recommendEmail;
 
-    public LoginResponseDTO(User user, String trackName) {
-
+    public LoginResponseDTO(User user, String trackName, Long trackId) {
         this.userId = user.getUserId();
 
         this.username = user.getUsername();
@@ -30,6 +31,8 @@ public class LoginResponseDTO {
         this.email = user.getEmail();
 
         this.track = trackName;
+
+        this.trackId = trackId;
 
         this.role = user.getRole();
 
