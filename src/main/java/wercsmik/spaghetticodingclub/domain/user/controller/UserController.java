@@ -24,12 +24,21 @@ public class UserController {
 
     private final UserService userService;
 
+    @GetMapping
+    public ResponseEntity<CommonResponse<ProfileResponseDTO>> getMyProfile(
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        ProfileResponseDTO responseDTO = userService.getMyProfile(userDetails);
+
+        return ResponseEntity.ok().body(CommonResponse.of("본인 프로필 조회 성공", responseDTO));
+    }
+
     @GetMapping("/{userId}")
-    public ResponseEntity<CommonResponse<ProfileResponseDTO>> getProfile(@PathVariable Long userId) {
+    public ResponseEntity<CommonResponse<ProfileResponseDTO>> getUserProfile(@PathVariable Long userId) {
 
-        ProfileResponseDTO responseDTO = userService.getProfile(userId);
+        ProfileResponseDTO responseDTO = userService.getUserProfile(userId);
 
-        return ResponseEntity.ok().body(CommonResponse.of("프로필 조회 성공", responseDTO));
+        return ResponseEntity.ok().body(CommonResponse.of("특정 유저 프로필 조회 성공", responseDTO));
     }
 
     @PatchMapping("/{userId}/password")
