@@ -22,14 +22,18 @@ public class ProfileResponseDTO {
 
     private UserRoleEnum role;
 
+    private Long trackId;
+
     private String trackName;
+
+    private Long currentTrackWeekId;
 
     private List<TrackWeekCreationResponseDTO> trackWeeks;
 
     private AssessmentResponseDTO assessment;
 
 
-    public ProfileResponseDTO(User user, String trackName, List<TrackWeekCreationResponseDTO> trackWeeks, AssessmentResponseDTO assessment) {
+    public ProfileResponseDTO(User user, Long trackId, String trackName, Long currentTrackWeekId, List<TrackWeekCreationResponseDTO> trackWeeks, AssessmentResponseDTO assessment) {
 
         this.userId = user.getUserId();
 
@@ -41,7 +45,11 @@ public class ProfileResponseDTO {
 
         this.role = user.getRole();
 
+        this.trackId = trackId;
+
         this.trackName = trackName;
+
+        this.currentTrackWeekId = currentTrackWeekId;
 
         this.trackWeeks = trackWeeks;
 

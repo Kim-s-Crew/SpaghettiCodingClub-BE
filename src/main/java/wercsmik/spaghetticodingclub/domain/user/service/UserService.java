@@ -1,5 +1,6 @@
 package wercsmik.spaghetticodingclub.domain.user.service;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +20,7 @@ import wercsmik.spaghetticodingclub.domain.user.entity.User;
 import wercsmik.spaghetticodingclub.domain.user.repository.UserRepository;
 import wercsmik.spaghetticodingclub.global.exception.CustomException;
 import wercsmik.spaghetticodingclub.global.exception.ErrorCode;
+import wercsmik.spaghetticodingclub.global.security.UserDetailsImpl;
 
 @Service
 @RequiredArgsConstructor
@@ -30,37 +32,21 @@ public class UserService {
     private final TrackWeekRepository trackWeekRepository;
     private final AssessmentRepository assessmentRepository;
 
-    public ProfileResponseDTO getProfile(Long userId) {
+    // 사용자 본인 프로필을 조회하는 메서드
+    public ProfileResponseDTO getMyProfile(UserDetailsImpl userDetails) {
+
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        return createProfileResponseDTO(user);
+    }
+
+    // 특정 유저 프로필을 조회하는 메서드
+    public ProfileResponseDTO getUserProfile(Long userId) {
 
         User user = getUser(userId);
 
-        // 사용자가 참여하고 있는 트랙 조회
-        List<TrackParticipants> trackParticipants = trackParticipantsRepository.findByUserUserId(user.getUserId());
-        String trackName = trackParticipants.stream().findFirst()
-                .map(participant -> participant.getTrack().getTrackName())
-                .orElse("참여된 트랙 없음"); // 사용자가 어떤 트랙에도 참여하지 않았다면 기본값 설정
-
-        // 해당 트랙의 주차 정보 조회
-        List<TrackWeekCreationResponseDTO> trackWeeks = trackParticipants.stream().findFirst()
-                .map(participant -> trackWeekRepository.findByTrack_TrackId(participant.getTrack().getTrackId()))
-                .orElse(Collections.emptyList())
-                .stream()
-                .map(TrackWeekCreationResponseDTO::from)
-                .collect(Collectors.toList());
-
-        // 유저에 대한 평가 정보 조회
-        AssessmentResponseDTO assessment = assessmentRepository.findFirstByUserId_UserIdOrderByCreatedAtDesc(user.getUserId())
-                .map(AssessmentResponseDTO::of)
-                .orElse(null); // 평가가 없는 경우 null
-
-
-        return new ProfileResponseDTO(user, trackName, trackWeeks, assessment);
-    }
-
-    public User getUser(Long userId) {
-
-        return userRepository.findById(userId).orElseThrow(()
-                -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        return createProfileResponseDTO(user);
     }
 
     @Transactional
@@ -88,5 +74,49 @@ public class UserService {
         }
 
         userRepository.save(user);
+    }
+
+    public User getUser(Long userId) {
+
+        return userRepository.findById(userId).orElseThrow(()
+                -> new CustomException(ErrorCode.USER_NOT_FOUND));
+    }
+
+    /**
+     * 공통 로직: 유저의 프로필 정보를 생성하는 메서드
+     * 유저의 트랙, 주차 정보 및 평가 정보를 포함한 프로필 응답 객체를 생성합니다.
+     */
+    private ProfileResponseDTO createProfileResponseDTO(User user) {
+        List<TrackParticipants> trackParticipants = trackParticipantsRepository.findByUserUserId(user.getUserId());
+        String trackName = trackParticipants.stream().findFirst()
+                .map(participant -> participant.getTrack().getTrackName())
+                .orElse("참여된 트랙 없음");
+        Long trackId = trackParticipants.stream().findFirst()
+                .map(participant -> participant.getTrack().getTrackId())
+                .orElse(null);
+
+        List<TrackWeekCreationResponseDTO> trackWeeks = trackParticipants.stream().findFirst()
+                .map(participant -> trackWeekRepository.findByTrack_TrackId(participant.getTrack().getTrackId()))
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(TrackWeekCreationResponseDTO::from)
+                .collect(Collectors.toList());
+
+        Long currentTrackWeekId = trackWeeks.stream()
+                .filter(trackWeek -> {
+                    LocalDate now = LocalDate.now();
+                    return (now.isAfter(trackWeek.getStartDate()) || now.isEqual(trackWeek.getStartDate())) &&
+                            (now.isBefore(trackWeek.getEndDate()) || now.isEqual(trackWeek.getEndDate()));
+                })
+                .map(TrackWeekCreationResponseDTO::getTrackWeekId)
+                .findFirst()
+                .orElse(null);
+
+        AssessmentResponseDTO assessment = assessmentRepository.findFirstByUserId_UserIdOrderByCreatedAtDesc(user.getUserId())
+                .map(AssessmentResponseDTO::of)
+                .orElse(null);
+
+        return new ProfileResponseDTO(user, trackId, trackName, currentTrackWeekId, trackWeeks,
+                assessment);
     }
 }
