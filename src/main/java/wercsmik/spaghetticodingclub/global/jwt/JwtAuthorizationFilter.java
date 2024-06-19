@@ -10,6 +10,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,8 +33,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final ObjectMapper objectMapper;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-            FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         String accessToken = jwtUtil.resolveAccessToken(request);
 
@@ -43,6 +46,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
                 // 인증정보에 유저정보 넣기
                 String username = info.getSubject();
+                log.info("JWT 토큰 유효: 사용자 이름 {}", username);
+
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
 
                 UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(username);
@@ -54,16 +59,20 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.setContext(context);
             } else if (accessToken != null) { // accessToken이 null이 아니지만 유효하지 않은 토큰일 경우
+                log.info("JWT 토큰이 유효하지 않습니다.");
                 sendErrorResponse(response, "토큰이 유효하지 않습니다.", HttpServletResponse.SC_FORBIDDEN);
                 return;
             }
         } catch (ExpiredJwtException e) {
+            log.info("JWT 토큰 만료: {}", e.getMessage());
             sendErrorResponse(response, "토큰이 만료되었습니다.", HttpServletResponse.SC_UNAUTHORIZED);
             return;
         } catch (MalformedJwtException e) {
+            log.info("JWT 토큰 형식 오류: {}", e.getMessage());
             sendErrorResponse(response, "토큰 형식이 잘못되었습니다.", HttpServletResponse.SC_BAD_REQUEST);
             return;
         } catch (SignatureException e) {
+            log.info("JWT 토큰 서명 오류: {}", e.getMessage());
             sendErrorResponse(response, "토큰 서명이 잘못되었습니다.", HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }

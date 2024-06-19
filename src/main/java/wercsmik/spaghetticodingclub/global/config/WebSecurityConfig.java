@@ -86,7 +86,9 @@ public class WebSecurityConfig {
                 authorizeHttpRequests
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // preflight 요청 허용 설정
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
-                        .requestMatchers("/api/auths/**").permitAll() // '/api/auths/'로 시작하는 요청 모두 접근 허가
+                        .requestMatchers("/api/auths/signup").permitAll() // '/api/auths/signup' 접근 허가
+                        .requestMatchers("/api/auths/login").permitAll() // '/api/auths/login' 접근 허가
+                        .requestMatchers("/api/auths/withDraw").authenticated() // '/api/auths/withDraw' 요청은 인증 필요
                         .requestMatchers("/tracks").permitAll() // '/tracks' 요청 접근 허가 (트랙 전체 조회)
                         .requestMatchers("/schedules/**").authenticated() // '/schedules/'로 시작하는 요청은 인증 필요
                         .requestMatchers("/spaghettiiii").permitAll() // aws 테스트를 위함
