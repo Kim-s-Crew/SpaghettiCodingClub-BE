@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import wercsmik.spaghetticodingclub.domain.assessment.entity.Assessment;
 import wercsmik.spaghetticodingclub.domain.team.entity.Team;
+import wercsmik.spaghetticodingclub.domain.team.entity.TeamMember;
 import wercsmik.spaghetticodingclub.global.auditing.BaseTimeEntity;
 
 import java.util.ArrayList;
@@ -43,6 +44,9 @@ public class User extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "adminId", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Assessment> givenAssessments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<TeamMember> teamMembers = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teamId")
