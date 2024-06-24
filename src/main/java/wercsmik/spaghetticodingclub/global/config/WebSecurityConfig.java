@@ -65,7 +65,13 @@ public class WebSecurityConfig {
     @Bean
     public CorsConfiguration corsConfiguration() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("https://spaghetticoding.shop", "http://43.202.186.51:8080", "http://localhost:3000/", "http://43.202.186.51:3000", "http://localhost:3000"));
+        configuration.setAllowedOrigins(Arrays.asList(
+                "https://spaghetticoding.shop",
+                "http://43.202.186.51:8080",
+                "http://localhost:3000/",
+                "http://43.202.186.51:3000",
+                "http://localhost:3000",
+                "https://spaghetti-coding-club.vercel.app"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization"));
         configuration.setAllowCredentials(true);
@@ -89,6 +95,8 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/auths/signup").permitAll() // '/api/auths/signup' 접근 허가
                         .requestMatchers("/api/auths/login").permitAll() // '/api/auths/login' 접근 허가
                         .requestMatchers("/api/auths/withDraw").authenticated() // '/api/auths/withDraw' 요청은 인증 필요
+                        .requestMatchers("/api/auths/verify-email").permitAll() // 이메일 인증 요청 허가
+                        .requestMatchers("/api/auths/send-verification-code").permitAll() // 인증 코드 발송 요청 허가
                         .requestMatchers("/tracks").permitAll() // '/tracks' 요청 접근 허가 (트랙 전체 조회)
                         .requestMatchers("/schedules/**").authenticated() // '/schedules/'로 시작하는 요청은 인증 필요
                         .requestMatchers("/spaghettiiii").permitAll() // aws 테스트를 위함
