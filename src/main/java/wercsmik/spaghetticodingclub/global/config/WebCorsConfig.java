@@ -11,7 +11,13 @@ public class WebCorsConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
 
         registry.addMapping("/**")
-                .allowedOrigins("https://spaghetticoding.shop", "http://43.202.186.51:8080", "http://localhost:3000/", "http://43.202.186.51:3000", "http://localhost:3000")
+                .allowedOrigins(
+                        "https://spaghetticoding.shop",
+                        "http://43.202.186.51:8080",
+                        "http://localhost:3000/",
+                        "http://43.202.186.51:3000",
+                        "http://localhost:3000",
+                        "https://spaghetti-coding-club.vercel.app")
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE")
                 .allowedHeaders("Origin", "Content-Type", "Accept")
                 .allowCredentials(true)
