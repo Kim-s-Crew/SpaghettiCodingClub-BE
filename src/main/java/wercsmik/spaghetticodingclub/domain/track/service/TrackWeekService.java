@@ -14,6 +14,10 @@ import wercsmik.spaghetticodingclub.domain.track.entity.Track;
 import wercsmik.spaghetticodingclub.domain.track.entity.TrackWeek;
 import wercsmik.spaghetticodingclub.domain.track.repository.TrackRepository;
 import wercsmik.spaghetticodingclub.domain.track.repository.TrackWeekRepository;
+import wercsmik.spaghetticodingclub.domain.user.dto.UnassignedUserResponseDTO;
+import wercsmik.spaghetticodingclub.domain.user.entity.User;
+import wercsmik.spaghetticodingclub.domain.user.entity.UserRoleEnum;
+import wercsmik.spaghetticodingclub.domain.user.repository.UserRepository;
 import wercsmik.spaghetticodingclub.global.exception.CustomException;
 import wercsmik.spaghetticodingclub.global.exception.ErrorCode;
 
@@ -29,6 +33,7 @@ public class TrackWeekService {
     private final TrackWeekRepository trackWeekRepository;
     private final TrackRepository trackRepository;
     private final TeamMemberRepository teamMemberRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public TrackWeekCreationResponseDTO createTrackWeek(Long trackId, TrackWeekCreationRequestDTO requestDTO) {
@@ -53,6 +58,14 @@ public class TrackWeekService {
         trackWeekRepository.save(trackWeek);
 
         return convertToCreationDTO(trackWeek);
+    }
+
+    @Transactional(readOnly = true)
+    public List<UnassignedUserResponseDTO> getUnassignedUsers() {
+        List<User> users = userRepository.findUnassignedUsersByRole(UserRoleEnum.USER);
+        return users.stream()
+                .map(user -> new UnassignedUserResponseDTO(user.getUserId(), user.getUsername(), user.getEmail()))
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

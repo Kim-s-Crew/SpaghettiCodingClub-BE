@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import wercsmik.spaghetticodingclub.domain.track.dto.*;
 import wercsmik.spaghetticodingclub.domain.track.service.TrackWeekService;
+import wercsmik.spaghetticodingclub.domain.user.dto.UnassignedUserResponseDTO;
 import wercsmik.spaghetticodingclub.global.common.CommonResponse;
 
 import java.util.List;
@@ -59,5 +60,14 @@ public class TrackWeekController {
         TrackWeekUpdateResponseDTO trackWeek = trackWeekService.updateTrackWeek(trackId, weekId, requestDTO);
 
         return ResponseEntity.ok(CommonResponse.of("트랙 주차 수정 성공", trackWeek));
+    }
+
+    @GetMapping("/unassigned-users")
+    public ResponseEntity<CommonResponse<List<UnassignedUserResponseDTO>>> getUnassignedUsers(
+            @PathVariable Long trackId) {
+
+        List<UnassignedUserResponseDTO> unassignedUsers = trackWeekService.getUnassignedUsers();
+
+        return ResponseEntity.ok(CommonResponse.of("배정되지 않은 사용자 목록 조회 성공", unassignedUsers));
     }
 }
