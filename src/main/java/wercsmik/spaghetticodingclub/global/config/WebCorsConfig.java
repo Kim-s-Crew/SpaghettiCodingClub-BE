@@ -13,6 +13,7 @@ public class WebCorsConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins(
                         "https://spaghetticoding.shop",
+                        "https://www.spaghetticoding.shop",
                         "https://kim.spaghetticoding.shop",
                         "http://43.202.186.51:8080",
                         "http://localhost:3000/",
