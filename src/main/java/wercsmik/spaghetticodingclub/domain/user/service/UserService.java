@@ -15,8 +15,10 @@ import wercsmik.spaghetticodingclub.domain.track.entity.TrackParticipants;
 import wercsmik.spaghetticodingclub.domain.track.repository.TrackParticipantsRepository;
 import wercsmik.spaghetticodingclub.domain.track.repository.TrackWeekRepository;
 import wercsmik.spaghetticodingclub.domain.user.dto.ProfileResponseDTO;
+import wercsmik.spaghetticodingclub.domain.user.dto.UpdateUserNameRequestDTO;
 import wercsmik.spaghetticodingclub.domain.user.dto.UpdateUserPasswordRequestDTO;
 import wercsmik.spaghetticodingclub.domain.user.entity.User;
+import wercsmik.spaghetticodingclub.domain.user.entity.UserRoleEnum;
 import wercsmik.spaghetticodingclub.domain.user.repository.UserRepository;
 import wercsmik.spaghetticodingclub.global.exception.CustomException;
 import wercsmik.spaghetticodingclub.global.exception.ErrorCode;
@@ -74,6 +76,18 @@ public class UserService {
         }
 
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void updateUserName(Long userId, UpdateUserNameRequestDTO requestDTO, User loginUser) {
+        User userToUpdate = getUser(userId);
+
+        if (loginUser.getRole() == UserRoleEnum.USER && !loginUser.getUserId().equals(userId)) {
+            throw new CustomException(ErrorCode.AUTHENTICATION_MISMATCH_EXCEPTION);
+        }
+
+        userToUpdate.setUsername(requestDTO.getUsername());
+        userRepository.save(userToUpdate);
     }
 
     public User getUser(Long userId) {

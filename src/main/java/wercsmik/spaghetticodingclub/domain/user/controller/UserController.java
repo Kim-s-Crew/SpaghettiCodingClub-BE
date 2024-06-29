@@ -3,6 +3,7 @@ package wercsmik.spaghetticodingclub.domain.user.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wercsmik.spaghetticodingclub.domain.user.dto.ProfileResponseDTO;
+import wercsmik.spaghetticodingclub.domain.user.dto.UpdateUserNameRequestDTO;
 import wercsmik.spaghetticodingclub.domain.user.dto.UpdateUserPasswordRequestDTO;
 import wercsmik.spaghetticodingclub.domain.user.entity.User;
 import wercsmik.spaghetticodingclub.domain.user.service.UserService;
@@ -53,4 +55,16 @@ public class UserController {
         return ResponseEntity.ok().body(CommonResponse.of("비밀번호 수정 성공", null));
     }
 
+    @PatchMapping("/{userId}/username")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<CommonResponse<Void>> updateName(
+            @PathVariable Long userId,
+            @Valid @RequestBody UpdateUserNameRequestDTO requestDTO,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        User loginUser = userDetails.getUser();
+        userService.updateUserName(userId, requestDTO, loginUser);
+
+        return ResponseEntity.ok().body(CommonResponse.of("사용자 이름 변경 성공", null));
+    }
 }
