@@ -1,20 +1,22 @@
 package wercsmik.spaghetticodingclub.domain.user.service;
 
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wercsmik.spaghetticodingclub.domain.assessment.dto.AssessmentResponseDTO;
 import wercsmik.spaghetticodingclub.domain.assessment.repository.AssessmentRepository;
 import wercsmik.spaghetticodingclub.domain.track.dto.TrackWeekCreationResponseDTO;
+import wercsmik.spaghetticodingclub.domain.track.entity.Track;
 import wercsmik.spaghetticodingclub.domain.track.entity.TrackParticipants;
+import wercsmik.spaghetticodingclub.domain.track.entity.TrackWeek;
 import wercsmik.spaghetticodingclub.domain.track.repository.TrackParticipantsRepository;
+import wercsmik.spaghetticodingclub.domain.track.repository.TrackRepository;
 import wercsmik.spaghetticodingclub.domain.track.repository.TrackWeekRepository;
 import wercsmik.spaghetticodingclub.domain.user.dto.ProfileResponseDTO;
+import wercsmik.spaghetticodingclub.domain.user.dto.UnassignedUserResponseDTO;
 import wercsmik.spaghetticodingclub.domain.user.dto.UpdateUserNameRequestDTO;
 import wercsmik.spaghetticodingclub.domain.user.dto.UpdateUserPasswordRequestDTO;
 import wercsmik.spaghetticodingclub.domain.user.entity.User;
@@ -23,6 +25,11 @@ import wercsmik.spaghetticodingclub.domain.user.repository.UserRepository;
 import wercsmik.spaghetticodingclub.global.exception.CustomException;
 import wercsmik.spaghetticodingclub.global.exception.ErrorCode;
 import wercsmik.spaghetticodingclub.global.security.UserDetailsImpl;
+
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +40,7 @@ public class UserService {
     private final TrackParticipantsRepository trackParticipantsRepository;
     private final TrackWeekRepository trackWeekRepository;
     private final AssessmentRepository assessmentRepository;
+    private final TrackRepository trackRepository;
 
     // 사용자 본인 프로필을 조회하는 메서드
     public ProfileResponseDTO getMyProfile(UserDetailsImpl userDetails) {
@@ -96,6 +104,26 @@ public class UserService {
                 -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 
+    @Transactional(readOnly = true)
+    public List<UnassignedUserResponseDTO> getUsersWithoutTeam(Long trackId, Long weekId) {
+
+        if (!isAdmin()) {
+            throw new CustomException(ErrorCode.NO_AUTHENTICATION);
+        }
+
+        Track track = trackRepository.findById(trackId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRACK_NOT_FOUND));
+
+        TrackWeek trackWeek = trackWeekRepository.findById(weekId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TRACK_WEEK_NOT_FOUND));
+
+        List<User> users = userRepository.findUsersWithoutTeam(trackId, weekId);
+
+        return users.stream()
+                .map(user -> new UnassignedUserResponseDTO(user.getUserId(), user.getUsername(), user.getEmail()))
+                .collect(Collectors.toList());
+    }
+
     /**
      * 공통 로직: 유저의 프로필 정보를 생성하는 메서드
      * 유저의 트랙, 주차 정보 및 평가 정보를 포함한 프로필 응답 객체를 생성합니다.
@@ -132,5 +160,10 @@ public class UserService {
 
         return new ProfileResponseDTO(user, trackId, trackName, currentTrackWeekId, trackWeeks,
                 assessment);
+    }
+
+    private boolean isAdmin() {
+        return SecurityContextHolder.getContext().getAuthentication()
+                .getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
     }
 }
