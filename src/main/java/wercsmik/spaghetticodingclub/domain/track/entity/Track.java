@@ -1,10 +1,7 @@
 package wercsmik.spaghetticodingclub.domain.track.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import wercsmik.spaghetticodingclub.global.auditing.BaseTimeEntity;
 
 @Entity
@@ -18,10 +15,7 @@ public class Track extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long trackId;
 
+    @Setter
     @Column(nullable = false, length = 50)
     private String trackName;
-
-    public void setTrackName(String trackName) {
-        this.trackName = trackName;
-    }
 }

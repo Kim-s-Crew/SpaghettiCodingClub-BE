@@ -1,10 +1,7 @@
 package wercsmik.spaghetticodingclub.domain.track.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import wercsmik.spaghetticodingclub.domain.team.entity.Team;
 import wercsmik.spaghetticodingclub.global.auditing.BaseTimeEntity;
 
@@ -28,27 +25,24 @@ public class TrackWeek extends BaseTimeEntity {
     @JoinColumn(name = "trackId", nullable = false)
     private Track track;
 
+    @Setter
     @Column(nullable = false, length = 50)
     private String weekName;
 
+    @Setter
     @Column(nullable = false)
     private LocalDate startDate;
 
+    @Setter
     @Column(nullable = false)
     private LocalDate endDate;
 
     @OneToMany(mappedBy = "trackWeek", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Team> teams = new ArrayList<>();
 
-    public void setWeekName(String weekName) {
-        this.weekName = weekName;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+    @Builder
+    public TrackWeek(Track track /*, 기타 필드들 */) {
+        this.track = track;
+        // 기타 필드 초기화
     }
 }

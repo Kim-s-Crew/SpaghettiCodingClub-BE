@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import wercsmik.spaghetticodingclub.domain.track.entity.TrackWeek;
-import wercsmik.spaghetticodingclub.domain.user.entity.User;
 import wercsmik.spaghetticodingclub.global.auditing.BaseTimeEntity;
 
 import java.util.ArrayList;
@@ -24,25 +23,21 @@ public class Team extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long teamId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trackWeekId", nullable = false)
-    private TrackWeek trackWeek;
-
-    @Column(length = 50, nullable = false)
+    @Column(nullable = false)
     private String teamName;
 
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<User> members = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "track_week_id")
+    private TrackWeek trackWeek;
+
+    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TeamMember> members = new ArrayList<>();
 
     //TODO(은채): 팀리더 설정
 
-    public static class TeamBuilder {
-        public TeamBuilder members(List<User> members) {
-            if (this.members == null) {
-                this.members = new ArrayList<>();
-            }
-            this.members.addAll(members);
-            return this;
-        }
+    @Builder
+    public Team(String teamName, TrackWeek trackWeek) {
+        this.teamName = teamName;
+        this.trackWeek = trackWeek;
     }
 }

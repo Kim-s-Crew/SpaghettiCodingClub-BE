@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import wercsmik.spaghetticodingclub.domain.track.dto.TrackParticipantResponseDTO;
 import wercsmik.spaghetticodingclub.domain.track.dto.TrackParticipantUpdateResponseDTO;
 import wercsmik.spaghetticodingclub.domain.track.entity.Track;
-import wercsmik.spaghetticodingclub.domain.track.entity.TrackParticipantId;
 import wercsmik.spaghetticodingclub.domain.track.entity.TrackParticipants;
 import wercsmik.spaghetticodingclub.domain.track.repository.TrackParticipantsRepository;
 import wercsmik.spaghetticodingclub.domain.track.repository.TrackRepository;
@@ -49,17 +48,22 @@ public class TrackParticipantsService {
         trackParticipantsRepository.save(participant);
     }
 
+    @Transactional(readOnly = true)
     public List<TrackParticipantResponseDTO> getParticipantsByTrack(Long trackId) {
 
-        List<TrackParticipants> participants = trackParticipantsRepository.findByTrackTrackId(trackId);
-
-        return participants.stream()
-                .map(participant -> new TrackParticipantResponseDTO(
-                        participant.getUser().getUserId(),
-                        participant.getUser().getUsername(),
-                        participant.getTrack().getTrackId(),
-                        participant.getTrack().getTrackName(),
-                        participant.getJoinedAt()))
+        return trackParticipantsRepository.findByTrackTrackId(trackId)
+                .stream()
+                .map(participant -> {
+                    User user = participant.getUser();
+                    Track track = participant.getTrack();
+                    return TrackParticipantResponseDTO.builder()
+                            .userId(user.getUserId())
+                            .userName(user.getUsername())
+                            .trackId(track.getTrackId())
+                            .trackName(track.getTrackName())
+                            .joinedAt(participant.getJoinedAt())
+                            .build();
+                })
                 .collect(Collectors.toList());
     }
 
@@ -76,8 +80,7 @@ public class TrackParticipantsService {
                 .orElseThrow(() -> new CustomException(ErrorCode.TRACK_NOT_FOUND));
 
         // 트랙 참여자 정보 조회
-        TrackParticipantId participantId = new TrackParticipantId(userId, oldTrackId);
-        TrackParticipants participant = trackParticipantsRepository.findById(participantId)
+        TrackParticipants participant = trackParticipantsRepository.findByUser_UserIdAndTrack_TrackId(userId, oldTrackId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // 기존 트랙 참여자 정보 삭제
@@ -97,6 +100,7 @@ public class TrackParticipantsService {
                 .updatedTrackName(newTrack.getTrackName())
                 .build();
     }
+
 
     @Transactional
     public void removeParticipant(Long userId) {

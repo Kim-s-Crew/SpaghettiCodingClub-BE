@@ -1,10 +1,7 @@
 package wercsmik.spaghetticodingclub.domain.track.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import wercsmik.spaghetticodingclub.domain.user.entity.User;
 import wercsmik.spaghetticodingclub.global.auditing.BaseTimeEntity;
 
@@ -19,9 +16,11 @@ public class TrackNotice extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long noticeId;
 
+    @Setter
     @Column(nullable = false, length = 200)
     private String trackNoticeTitle;
 
+    @Setter
     @Column(nullable = false)
     private String trackNoticeContent;
 
@@ -32,12 +31,4 @@ public class TrackNotice extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = false)
     private User user;
-
-    public void setTrackNoticeTitle(String trackNoticeTitle) {
-        this.trackNoticeTitle = trackNoticeTitle;
-    }
-
-    public void setTrackNoticeContent(String trackNoticeContent) {
-        this.trackNoticeContent = trackNoticeContent;
-    }
 }

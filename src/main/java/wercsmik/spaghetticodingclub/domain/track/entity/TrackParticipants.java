@@ -1,6 +1,7 @@
 package wercsmik.spaghetticodingclub.domain.track.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -12,72 +13,21 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class TrackParticipants {
 
-    @EmbeddedId
-    private TrackParticipantId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long trackParticipantId;
 
-    @MapsId("userId") // TrackParticipantId의 userId 필드를 매핑
-    @ManyToOne
-    @JoinColumn(name = "userId", referencedColumnName = "userId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false)
     private User user;
 
-    @MapsId("trackId") // TrackParticipantId의 trackId 필드를 매핑
-    @ManyToOne
-    @JoinColumn(name = "trackId", referencedColumnName = "trackId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trackId", referencedColumnName = "trackId", nullable = false)
     private Track track;
 
     @Column(nullable = false)
     private LocalDateTime joinedAt;
-
-    public void updateTrack(Track newTrack) {
-        this.track = newTrack;
-    }
-
-    public Long getTrackId() {
-        return this.id.getTrackId();
-    }
-
-
-    public static class TrackParticipantsBuilder {
-        private Long userId;
-        private Long trackId;
-        private User user;
-        private Track track;
-        private LocalDateTime joinedAt;
-
-        public TrackParticipantsBuilder userId(Long userId) {
-            this.userId = userId;
-            return this;
-        }
-
-        public TrackParticipantsBuilder trackId(Long trackId) {
-            this.trackId = trackId;
-            return this;
-        }
-
-        public TrackParticipantsBuilder user(User user) {
-            this.user = user;
-            return this;
-        }
-
-        public TrackParticipantsBuilder track(Track track) {
-            this.track = track;
-            return this;
-        }
-
-        public TrackParticipantsBuilder joinedAt(LocalDateTime joinedAt) {
-            this.joinedAt = joinedAt;
-            return this;
-        }
-
-        public TrackParticipants build() {
-            TrackParticipants trackParticipants = new TrackParticipants();
-            trackParticipants.id = new TrackParticipantId(this.userId, this.trackId); // TrackParticipantId 초기화
-            trackParticipants.user = this.user;
-            trackParticipants.track = this.track;
-            trackParticipants.joinedAt = this.joinedAt;
-            return trackParticipants;
-        }
-    }
 }
