@@ -67,7 +67,7 @@ public class TrackNoticeService {
     @Transactional(readOnly = true)
     public List<TrackNoticeResponseDTO> getNoticesForUserByTrack(Long userId, Long trackId) {
 
-        if (!trackParticipantRepository.existsById_UserIdAndId_TrackId(userId, trackId)) {
+        if (trackParticipantRepository.findByUser_UserIdAndTrack_TrackId(userId, trackId).isEmpty()) {
             throw new CustomException(ErrorCode.NO_AUTHENTICATION);
         }
 
@@ -167,7 +167,7 @@ public class TrackNoticeService {
 
     private boolean isUserNoticeAccessible(Long userId, Long trackId) {
 
-        return trackParticipantRepository.existsById_UserIdAndId_TrackId(userId, trackId);
+        return trackParticipantRepository.findByUser_UserIdAndTrack_TrackId(userId, trackId).isPresent();
     }
 }
 

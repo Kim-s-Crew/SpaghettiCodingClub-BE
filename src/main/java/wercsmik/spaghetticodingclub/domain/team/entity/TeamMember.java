@@ -23,22 +23,14 @@ public class TeamMember {
     private Long teamMemberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "teamId", nullable = false)
+    @JoinColumn(name = "team_id")
     private Team team;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(nullable = false)
     @CreatedDate
     private LocalDateTime joinedAt;
-
-    public Long getUserId() {
-        return user.getUserId();
-    }
-
-    public String getUsername() {
-        return user.getUsername();
-    }
 }
