@@ -28,6 +28,14 @@ public enum ErrorCode {
 
     EMAIL_VERIFICATION_CODE_INVALID(400, "입력하신 이메일 인증 코드가 유효하지 않습니다"),
 
+    INVALID_VERIFICATION_TOKEN(400, "토큰이 유효하지 않습니다"),
+
+    TRACK_REQUIRED(400,"트랙이 필요합니다." ),
+
+    EMAIL_NOT_VERIFIED(400, "이메일 인증이 필요합니다."),
+
+    EMAIL_ALREADY_VERIFIED(400, "인증이 확인된 메일주소 입니다."),
+
     // Scheduler
     SCHEDULE_OVERLAP(400, "일정이 겹칩니다."),
 
@@ -48,6 +56,7 @@ public enum ErrorCode {
     TRACK_NAME_DUPLICATED(400, "이미 존재하는 트랙입니다."),
 
     INVALID_TRACK_NAME(400, "잘못된 트랙 이름입니다."),
+
 
 
     // Track Notice
