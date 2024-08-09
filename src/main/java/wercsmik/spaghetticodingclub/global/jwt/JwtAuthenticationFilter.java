@@ -72,6 +72,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String email = user.getEmail();
         UserRoleEnum role = user.getRole();
 
+        // 인증 여부 확인
+        if (!user.isVerified()) {
+            // 사용자가 인증되지 않은 경우
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            CommonResponse commonResponse = CommonResponse.of("인증이 필요합니다", null);
+            writeResponse(response, commonResponse);
+            return;
+        }
+
         String accessToken = jwtUtil.createAccessToken(email, role);
 
         jwtUtil.addJwtToHeader(accessToken, response);
