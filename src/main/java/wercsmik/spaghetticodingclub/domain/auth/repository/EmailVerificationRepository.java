@@ -1,4 +1,4 @@
-package wercsmik.spaghetticodingclub.domain.auth.repotiroy;
+package wercsmik.spaghetticodingclub.domain.auth.repository;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

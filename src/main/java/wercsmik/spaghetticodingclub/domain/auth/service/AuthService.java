@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import wercsmik.spaghetticodingclub.domain.auth.dto.DeleteRequestDTO;
 import wercsmik.spaghetticodingclub.domain.auth.dto.SignRequestDTO;
 import wercsmik.spaghetticodingclub.domain.auth.entity.EmailVerification;
-import wercsmik.spaghetticodingclub.domain.auth.repotiroy.EmailVerificationRepository;
+import wercsmik.spaghetticodingclub.domain.auth.repository.EmailVerificationRepository;
 import wercsmik.spaghetticodingclub.domain.track.repository.TrackRepository;
 import wercsmik.spaghetticodingclub.domain.track.service.TrackParticipantsService;
 import wercsmik.spaghetticodingclub.domain.user.entity.User;
