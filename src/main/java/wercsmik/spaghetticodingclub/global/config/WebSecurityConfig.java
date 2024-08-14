@@ -1,6 +1,8 @@
 package wercsmik.spaghetticodingclub.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -22,9 +24,6 @@ import wercsmik.spaghetticodingclub.global.jwt.JwtAuthenticationFilter;
 import wercsmik.spaghetticodingclub.global.jwt.JwtAuthorizationFilter;
 import wercsmik.spaghetticodingclub.global.jwt.JwtUtil;
 import wercsmik.spaghetticodingclub.global.security.UserDetailsServiceImpl;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -98,7 +97,8 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/auths/login").permitAll() // '/api/auths/login' 접근 허가
                         .requestMatchers("/api/auths/withDraw").authenticated() // '/api/auths/withDraw' 요청은 인증 필요
                         .requestMatchers("/api/auths/verify-email").permitAll() // 이메일 인증 요청 허가
-                        .requestMatchers("/api/auths/send-verification-code").permitAll() // 인증 코드 발송 요청 허가
+                        .requestMatchers("/api/auths/send-user-verification-link").permitAll() // 인증 링크 발송 요청 허가
+                        .requestMatchers("/api/auths/send-recommend-verification-link").permitAll() // 인증 링크 발송 요청 허가
                         .requestMatchers("/tracks").permitAll() // '/tracks' 요청 접근 허가 (트랙 전체 조회)
                         .requestMatchers("/schedules/**").authenticated() // '/schedules/'로 시작하는 요청은 인증 필요
                         .requestMatchers("/spaghettiiii").permitAll() // aws 테스트를 위함
