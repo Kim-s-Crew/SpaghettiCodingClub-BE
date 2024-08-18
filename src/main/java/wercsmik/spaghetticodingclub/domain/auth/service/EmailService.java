@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,9 @@ import wercsmik.spaghetticodingclub.global.exception.ErrorCode;
 @RequiredArgsConstructor
 @Slf4j
 public class EmailService {
+
+    @Value("${EMAIL_USERNAME}")
+    private String fromAddress;
 
     private final JavaMailSender mailSender;
     private final EmailVerificationRepository emailVerificationRepository;
@@ -45,7 +49,7 @@ public class EmailService {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-            helper.setFrom(System.getenv("EMAIL_USERNAME"));
+            helper.setFrom(fromAddress);
             helper.setTo(email);
             helper.setSubject("이메일 인증 링크");
             helper.setText(messageContent, true); // true indicates the content is HTML
