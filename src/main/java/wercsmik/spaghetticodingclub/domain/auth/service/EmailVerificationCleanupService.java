@@ -20,5 +20,4 @@ public class EmailVerificationCleanupService {
 
         System.out.println("Expired email verifications cleaned up at: " + now);
     }
-
 }
