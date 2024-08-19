@@ -38,6 +38,9 @@ spring:
         size: 5
       thread-name-prefix: scheduler-
 
+server:
+  url: http://43.202.186.51:8080
+
 jwt:
   secret:
     key: ${jwt.secretKey}

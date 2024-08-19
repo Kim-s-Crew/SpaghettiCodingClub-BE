@@ -25,6 +25,9 @@ public class EmailService {
     @Value("${EMAIL_USERNAME}")
     private String fromAddress;
 
+    @Value("${server.url}")
+    private String serverUrl;
+
     private final JavaMailSender mailSender;
     private final EmailVerificationRepository emailVerificationRepository;
 
@@ -41,7 +44,8 @@ public class EmailService {
 
         // 인증 토큰 생성
         String token = UUID.randomUUID().toString();
-        String verificationLink = "http://localhost:8080/api/auths/verify-email?token=" + token;
+        // serverUrl을 사용하여 인증 링크 생성
+        String verificationLink = serverUrl + "/api/auths/verify-email?token=" + token;
 
         // HTML 이메일 생성
         String messageContent = createMessageContent(emailType, requesterEmail, verificationLink);
